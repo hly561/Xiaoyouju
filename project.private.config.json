@@ -3,6 +3,7 @@
   "condition": {},
   "libVersion": "3.7.12",
   "projectname": "miniprogram-7",
+  "cloudfunctionRoot": "cloudfunctions",
   "setting": {
     "urlCheck": false,
     "coverView": true,
