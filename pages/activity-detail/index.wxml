@@ -1,47 +1,190 @@
 <view class="activity-detail">
   <view class="activity-detail-container">
-    <view class="activity-header">
-      <view class="activity-title">{{activity.title}}</view>
-      <view class="activity-info">
-        <view class="info-item">
-          <t-icon name="user" size="32rpx" />
-          <text>    {{activity.creatorName || '未设置'}} {{activity.createdBy.phoneNumber ? '(' + activity.createdBy.phoneNumber + ')' : ''}}</text>
-        </view>
-        <view class="info-item">
+  <view class="activity-header">
+    <view class="activity-title">{{activity.title}}</view>
+    <view class="activity-info">
+      <view class="info-item">
           <t-icon name="time" size="32rpx" />
           <text>    {{activity.activityStartTime}} - {{activity.activityEndTime}}</text>
-        </view>
-        <view class="info-item">
+      </view>
+      <view class="info-item">
           <t-icon name="location" size="32rpx" />
           <text>    {{activity.locationText}}</text>
           <text wx:if="{{activity.location && activity.location.meetingLink}}"> (会议链接: {{activity.location.meetingLink}})</text>
         </view>
-      </view>
-      <view class="section-title">活动介绍</view>
-      <view class="activity-description">{{activity.description}}</view>
-      <view class="qrcode-section">
-        <view class="section-title">群聊二维码</view>
-        <image class="qrcode-image" src="{{activity.qrcodeUrl}}" mode="aspectFit" bindtap="previewQrCode"></image>
+      <view wx:if="{{activity.registrationDeadline}}" class="info-item">
+          <t-icon name="calendar" size="32rpx" />
+          <text>    报名截止: {{activity.registrationDeadline}}</text>
+          <text wx:if="{{registrationDeadlinePassed}}" class="deadline-status expired"> (已截止)</text>
+        </view>
+    </view>
+    <view wx:if="{{activity.imageUrls && activity.imageUrls.length > 0}}">
+      <view class="section-title">活动图片/海报</view>
+      <view class="poster-gallery">
+        <image wx:for="{{activity.imageUrls}}" wx:key="index" class="poster-image" src="{{item}}" mode="aspectFill" bindtap="previewPoster" data-index="{{index}}"></image>
       </view>
     </view>
-    <view class="registered-users">
-      <view class="section-title">
-        <text>已报名</text>
-        <text class="participants-count">{{activity.participants.length}}/{{activity.participantLimit > 0 ? activity.participantLimit : '不限'}}</text>
+    <view class="section-title">活动介绍</view>
+    <view class="activity-description">{{activity.description}}</view>
+      <view class="qrcode-section">
+        <view class="section-title">群聊二维码</view>
+        <image wx:if="{{!qrCodeError && activity.qrcodeUrl}}" class="qrcode-image" src="{{activity.qrcodeUrl}}" mode="aspectFit" bindtap="previewQrCode" binderror="onQrCodeError" bindload="onQrCodeLoad"></image>
+        <view wx:if="{{qrCodeError || !activity.qrcodeUrl}}" class="qrcode-error" bindtap="retryLoadQrCode">
+          <text>{{qrCodeErrorMsg || '二维码加载失败，点击重试'}}</text>
+  </view>
+  </view>
+</view>
+
+<!-- 报名问卷弹窗 -->
+<t-popup visible="{{questionnaireVisible}}" placement="bottom" bind:visible-change="onQnVisibleChange">
+  <view class="qn-fill-container">
+    <view class="qn-fill-header">填写报名问卷</view>
+    <scroll-view class="qn-fill-body" scroll-y="true">
+      <view wx:if="{{needRealName}}" class="qn-fill-item">
+        <view class="qn-field-title">真实姓名<text class="req-star">*</text></view>
+        <t-input value="{{qnName}}" placeholder="请输入真实姓名" bind:change="onQnNameChange" />
       </view>
-      <view class="user-list">
-        <view wx:for="{{activity.registeredUsers}}" wx:key="index" class="user-item">
-          <image class="user-avatar" src="{{item.image}}" mode="aspectFill"></image>
-          <view class="user-info">
-            <text class="user-nickname">{{item.name}}</text>
-            <text class="user-school-major">{{item.school}} {{item.major}}</text>
-            <text class="user-graduation">{{item.graduationYear}} 届</text>
+      <view wx:if="{{needPhoneNumber}}" class="qn-fill-item">
+        <view class="qn-field-title">手机号码<text class="req-star">*</text></view>
+        <t-input value="{{qnPhone}}" placeholder="请输入手机号" bind:change="onQnPhoneChange" />
+      </view>
+      <view wx:for="{{questionnaireFields}}" wx:key="id" class="qn-fill-item">
+        <view class="qn-field-title">{{item.title}}<text wx:if="{{item.required}}" class="req-star">*</text><text wx:if="{{item.type === 'single'}}" class="qn-type-tag">（单选）</text><text wx:elif="{{item.type === 'multi'}}" class="qn-type-tag">（多选）</text></view>
+        <view class="qn-field-desc" wx:if="{{item.desc}}">{{item.desc}}</view>
+        <view wx:if="{{item.type === 'text'}}">
+          <t-input value="{{questionnaireAnswers[item.id] || ''}}" placeholder="请输入" data-id="{{item.id}}" bind:change="onQnTextChange" />
+        </view>
+        <view wx:elif="{{item.type === 'single'}}">
+          <t-radio-group value="{{questionnaireAnswers[item.id] || ''}}" data-id="{{item.id}}" bind:change="onQnSingleChange">
+            <t-radio wx:for="{{item.options}}" wx:for-item="opt" wx:key="value" value="{{opt.value}}" label="{{opt.value}}" />
+          </t-radio-group>
+        </view>
+        <view wx:elif="{{item.type === 'multi'}}">
+          <t-checkbox-group value="{{questionnaireAnswers[item.id] || []}}" data-id="{{item.id}}" bind:change="onQnMultiChange">
+            <t-checkbox wx:for="{{item.options}}" wx:for-item="opt" wx:key="value" value="{{opt.value}}" label="{{opt.value}}" />
+          </t-checkbox-group>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="qn-fill-footer">
+      <t-button class="qn-cancel" theme="default" bind:tap="onQnCancel">取消</t-button>
+      <t-button class="qn-submit" theme="primary" bind:tap="onQnSubmit">提交并报名</t-button>
+    </view>
+  </view>
+</t-popup>
+<!-- 留言弹窗 -->
+<t-popup visible="{{leaveMessageVisible}}" placement="bottom" bind:visible-change="onLeaveMessageCancel">
+  <view class="leave-popup">
+    <view class="leave-header">留言</view>
+    <view class="leave-body">
+      <t-textarea value="{{leaveMessageText}}" placeholder="请输入留言内容（最多50字）" bind:change="onLeaveMessageChange" indicator maxlength="50" />
+    </view>
+    <view class="leave-footer">
+      <t-button theme="default" class="leave-cancel" bind:tap="onLeaveMessageCancel">取消</t-button>
+      <t-button theme="primary" class="leave-submit" bind:tap="onLeaveMessageSubmit">发布</t-button>
+    </view>
+  </view>
+</t-popup>
+    <view class="organizer-card">
+      <view class="section-title">
+        <view class="section-title-left">
+          <text>组织者</text>
+        </view>
+        <t-icon wx:if="{{activity.isCreator}}" name="help-circle" size="28rpx" color="#999999" bindtap="onEducationVisibilityHelp" data-role="organizer" />
+      </view>
+      <view class="user-item">
+        <image wx:if="{{organizer && organizer.image}}" class="user-avatar" src="{{organizer.image}}" mode="aspectFill" binderror="onOrganizerAvatarError"></image>
+        <view wx:else class="user-avatar default-avatar">
+          <text class="avatar-text">{{(organizer && organizer.name) ? organizer.name.charAt(0) : '组'}}</text>
+        </view>
+        <view class="user-info">
+          <text class="user-nickname">{{(organizer && organizer.name) ? organizer.name : (activity.creatorName || '未设置')}}</text>
+          <view class="user-educations">
+            <view wx:for="{{(organizer && organizer.educationEntries) || []}}" wx:for-item="edu" wx:key="index" class="org-education-item">
+              <view class="org-education-text">
+                <text class="user-school-major">{{edu.school}} {{edu.major}}</text>
+                <text class="user-degree" wx:if="{{edu.degree}}"> {{edu.degree}}</text>
+                <text class="user-graduation" wx:if="{{edu.graduationYear}}"> {{edu.graduationYear}} 届</text>
+              </view>
+              <t-icon wx:if="{{activity.isCreator}}" class="edu-eye" name="{{edu.visible !== false ? 'browse' : 'browse-off'}}" size="28rpx" color="#999999" bindtap="onToggleEducationVisibility" data-user-phone="{{organizer.phoneNumber}}" data-key="{{edu._key}}" />
+            </view>
           </view>
         </view>
       </view>
     </view>
-    <t-button theme="primary" bindtap="{{activity.isRegistered ? 'onCancelRegister' : 'onRegister'}}" class="register-button">
-      {{activity.isRegistered ? '取消报名' : '立即报名'}}
-    </t-button>
+    <view wx:if="{{isCreator || activity.showRegisteredCountToParticipants}}" class="registered-users">
+      <view class="section-title">
+        <view class="section-title-left">
+          <text>已报名</text>
+          <text wx:if="{{isCreator || activity.showRegisteredCountToParticipants}}" class="participants-count">{{activity.participants.length}}/{{activity.participantLimit > 0 ? activity.participantLimit : '不限'}}</text>
+        </view>
+        <view wx:if="{{isCreator && questionnaireHasInfo}}" class="section-link" bindtap="onViewQuestionnaireDetails">
+          <text class="section-link-text">报名者详细信息</text>
+          <t-icon name="chevron-right" size="28rpx" color="#999999" />
+        </view>
+        <t-icon wx:if="{{!isCreator}}" name="help-circle" size="28rpx" color="#999999" bindtap="onEducationVisibilityHelp" data-role="participant" />
+      </view>
+      <view wx:if="{{isCreator}}" class="registered-option">
+        <text class="registered-option-label">允许报名者查看已报名人数</text>
+        <t-switch value="{{activity.showRegisteredCountToParticipants}}" bind:change="onToggleShowRegisteredCount" />
+      </view>
+      <view class="user-list">
+        <view wx:for="{{activity.registeredUsers}}" wx:key="index" class="user-item">
+          <image wx:if="{{item.image}}" class="user-avatar" src="{{item.image}}" mode="aspectFill" binderror="onUserAvatarError" data-index="{{index}}"></image>
+          <view wx:else class="user-avatar default-avatar">
+            <text class="avatar-text">{{item.name ? item.name.charAt(0) : '用'}}</text>
+          </view>
+          <view class="user-info">
+            <text class="user-nickname">{{item.name}}</text>
+            <view class="user-educations">
+              <view wx:for="{{item.educationEntries}}" wx:for-item="edu" wx:key="index" class="education-item">
+                <view class="education-text">
+                  <text class="user-school-major">{{edu.school}} {{edu.major}}</text>
+                  <text class="user-degree" wx:if="{{edu.degree}}"> {{edu.degree}}</text>
+                  <text class="user-graduation" wx:if="{{edu.graduationYear}}"> {{edu.graduationYear}} 届</text>
+                </view>
+                <t-icon wx:if="{{item.isSelf}}" class="edu-eye" name="{{edu.visible !== false ? 'browse' : 'browse-off'}}" size="28rpx" color="#999999" bindtap="onToggleEducationVisibility" data-user-phone="{{item.phoneNumber}}" data-key="{{edu._key}}" />
+              </view>
+            </view>
+            <view wx:if="{{item.messages && item.messages.length}}" class="user-messages">
+              <view wx:for="{{item.messages}}" wx:for-item="msg" wx:key="createdAt" class="user-message">
+                <view class="user-message-bubble">
+                  <text class="user-message-label">留言：</text>
+                  <text class="user-message-content">{{msg.content}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 活动发布者显示修改和删除按钮（仅在活动未开始时显示） -->
+    <view wx:if="{{isCreator && !isOngoingOrEnded}}" class="creator-buttons">
+      <t-button theme="primary" bindtap="onEditActivity" class="creator-button edit-button">
+        修改活动
+      </t-button>
+      <t-button theme="danger" bindtap="onDeleteActivity" class="creator-button delete-button">
+        删除活动
+      </t-button>
+    </view>
+    <block wx:elif="{{!isCreator && !isOngoingOrEnded}}"></block>
   </view>
 </view>
+
+<!-- 底部固定报名按钮 -->
+<block wx:if="{{isCreator === false && !isOngoingOrEnded}}">
+  <view class="register-footer">
+    <button wx:if="{{!activity.isRegistered && activity.participantLimit && activity.participants.length >= activity.participantLimit}}"
+            class="register-button-native disabled" disabled>报名已满</button>
+    <button wx:elif="{{!activity.isRegistered && activity.registrationDeadlineValue && registrationDeadlinePassed}}"
+            class="register-button-native disabled" disabled>报名已截止</button>
+    <block wx:elif="{{activity.isRegistered}}">
+      <view class="register-footer-row">
+        <button class="register-button-native danger" bindtap="onCancelRegister">取消报名</button>
+        <button class="register-button-native primary" bindtap="onLeaveMessage">留言</button>
+      </view>
+    </block>
+    <button wx:else
+            class="register-button-native primary" bindtap="onRegister">立即报名</button>
+  </view>
+</block>

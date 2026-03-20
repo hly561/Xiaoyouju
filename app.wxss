@@ -6,6 +6,8 @@ page {
   background-color: #f3f3f3;
 }
 
+/* 滚动条样式已移除 */
+
 /* 清除浮动 */
 .clearfix:after {
   content: "";

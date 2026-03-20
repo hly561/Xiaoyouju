@@ -53,7 +53,7 @@ const mockData = [
 ];
 
 // 模拟新增一条消息
-function addNewMessage(userId, from, content) {
+async function addNewMessage(userId, from, content) {
   const index = mockData.map((item) => item.userId).indexOf(userId);
   const user = mockData.splice(index, 1)[0];
   mockData.unshift(user);
@@ -63,6 +63,54 @@ function addNewMessage(userId, from, content) {
   });
   const message = { messageId, from, content, time: Date.now(), read: from === 0 };
   user.messages.push(message);
+
+  // 如果是对方发送的消息(from === 1)，也保存到云数据库
+  if (from === 1) {
+    try {
+      // 获取当前用户手机号
+      const phoneNumber = wx.getStorageSync('phoneNumber');
+      const userInfo = wx.getStorageSync('userInfo');
+      const openid = userInfo ? userInfo.openid : '';
+      
+      if (phoneNumber || openid) {
+        const db = wx.cloud.database();
+        const messageData = {
+          id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          userId: phoneNumber || openid, // 接收方的手机号或openid
+          phoneNumber: phoneNumber, // 明确保存接收方手机号
+          openid: openid, // 保存接收方openid
+          targetUserId: userId, // 消息发送方
+          type: 'user',
+          name: user.name,
+          avatar: user.avatar,
+          content: content,
+          lastMessage: content,
+          isRead: false,
+          createdAt: new Date()
+        };
+        
+        await db.collection('messages').add({
+          data: messageData
+        });
+        
+        // 更新接收消息用户的messageAllread状态
+        try {
+          await wx.cloud.callFunction({
+            name: 'updateAllUsersMessageStatus',
+            data: {
+              phoneNumbers: [phoneNumber]
+            }
+          });
+          console.log('更新接收消息用户messageAllread状态成功');
+        } catch (updateError) {
+          console.error('更新接收消息用户messageAllread状态失败:', updateError);
+        }
+
+      }
+    } catch (error) {
+      console.error('保存对方消息到数据库失败:', error);
+    }
+  }
 
   return message;
 }
@@ -91,13 +139,13 @@ class MockSocketTask {
     data = JSON.parse(data);
     if (data.type === 'message') {
       const { userId, content } = data.data;
-      delay().then(() => {
-        const message = addNewMessage(userId, 0, content);
+      delay().then(async () => {
+        const message = await addNewMessage(userId, 0, content);
         this.onmessage(JSON.stringify({ type: 'message', data: { userId, message } }));
       });
       // 模拟3秒后对方回复消息
-      delay(3000).then(() => {
-        const message = addNewMessage(userId, 1, ['收到', '好的', '知道了', '👌OK'].at(Math.floor(Math.random() * 4)));
+      delay(3000).then(async () => {
+        const message = await addNewMessage(userId, 1, ['收到', '好的', '知道了', '👌OK'].at(Math.floor(Math.random() * 4)));
         this.onmessage(JSON.stringify({ type: 'message', data: { userId, message } }));
       });
     }
@@ -111,12 +159,30 @@ export function connectSocket() {
 }
 
 /** 获取未读消息数量 */
-export function fetchUnreadNum() {
-  let unreadNum = 0;
-  mockData.forEach((item) => {
-    unreadNum += item.messages.filter((message) => !message.read).length;
-  });
-  return delay().then(() => ({ code: 200, data: unreadNum }));
+export async function fetchUnreadNum() {
+  try {
+    // 获取当前用户手机号
+    const phoneNumber = wx.getStorageSync('phoneNumber');
+    if (!phoneNumber) {
+      return { code: 200, data: 0 };
+    }
+    
+    // 查询数据库中未读消息数量
+    const db = wx.cloud.database();
+    const result = await db.collection('messages')
+      .where({
+        phoneNumber: phoneNumber,
+        isRead: false
+      })
+      .count();
+    
+    console.log('查询未读消息数量:', result.total);
+    return { code: 200, data: result.total };
+  } catch (error) {
+    console.error('获取未读消息数量失败:', error);
+    // 出错时返回0，避免影响应用正常运行
+    return { code: 200, data: 0 };
+  }
 }
 
 /** 获取完整消息列表 */

@@ -1,5 +1,10 @@
-<t-tab-bar value="{{ value }}" theme="tag" split="{{ false }}" bind:change="handleChange">
-  <t-tab-bar-item icon="home" value="home">首页</t-tab-bar-item>
-  <t-tab-bar-item icon="chat" value="message">消息</t-tab-bar-item>
-  <t-tab-bar-item icon="user" value="my">我的</t-tab-bar-item>
-</t-tab-bar>
+<view class="custom-tab-bar-wrapper">
+  <t-tab-bar value="{{value}}" bindchange="handleChange" theme="tag" class="custom-tab-bar">
+    <t-tab-bar-item icon="home" value="home">首页</t-tab-bar-item>
+    <t-tab-bar-item icon="chat" value="message" class="message-tab-item">
+      消息
+      <view wx:if="{{showRedDot}}" class="message-unread-dot"></view>
+    </t-tab-bar-item>
+    <t-tab-bar-item icon="user" value="my">我的</t-tab-bar-item>
+  </t-tab-bar>
+</view>

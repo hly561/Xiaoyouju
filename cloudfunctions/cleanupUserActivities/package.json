@@ -1,0 +1,9 @@
+{
+  "name": "cleanupUserActivities",
+  "version": "1.0.0",
+  "description": "删除最后一个已认证学历后，清理用户相关活动",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -18,7 +18,7 @@
     </view>
   </view>
 
-  <scroll-view scroll-y class="content" scroll-into-view="{{toView}}" scroll-with-animation>
+  <scroll-view scroll-y class="content" scroll-into-view="{{toView}}" scroll-with-animation show-scrollbar="{{false}}">
     <!-- 搜索结果展示区域 -->
     <block wx:if="{{isSearching}}">
       <view class="search-result">
@@ -29,9 +29,16 @@
     
     <!-- 常规城市列表展示 -->
     <block wx:else>
-      <view class="location" id="dw">
-        <view class="location-title">当前定位城市</view>
-        <view class="location-city">{{currentCity || '定位中...'}}</view>
+      <view class="location" id="dw" bindtap="onLocationTap">
+        <view class="location-content">
+          <view class="location-icon">
+            <t-icon name="location" size="48rpx" color="#0066cc" />
+          </view>
+          <view class="location-info">
+            <view class="location-city">{{currentCity || '定位中...'}}</view>
+            <view class="location-tip">点击重新定位</view>
+          </view>
+        </view>
       </view>
 
       <view class="hot-cities">

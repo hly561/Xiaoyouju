@@ -1,6 +1,6 @@
-import getDataCenterArea from './getArea';
-import getDataCenterMember from './getMember';
-import getDataCompleteRate from './getCompleteRate';
-import getDataInteraction from './getInteraction';
+import getDataCenterArea from './getArea.js';
+import getDataCenterMember from './getMember.js';
+import getDataCompleteRate from './getCompleteRate.js';
+import getDataInteraction from './getInteraction.js';
 
 export default [getDataCenterArea, getDataCenterMember, getDataCompleteRate, getDataInteraction];

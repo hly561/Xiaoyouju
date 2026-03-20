@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="card">
+    <t-cell-group>
+      <t-cell title="联系客服" arrow hover bind:click="onContactService"></t-cell>
+      <t-cell title="商务合作" arrow hover bind:click="onBusinessCooperation"></t-cell>
+      <t-cell title="提供宝贵意见" arrow hover bind:click="onWriteSuggestion"></t-cell>
+    </t-cell-group>
+  </view>
+  <!-- 建议改为使用系统弹窗（wx.showModal）在 JS 逻辑中实现 -->
+</view>

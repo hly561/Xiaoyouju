@@ -68,13 +68,58 @@ Page({
   },
 
   /** 发送消息 */
-  sendMessage() {
+  async sendMessage() {
     const { userId, messages, input: content } = this.data;
     if (!content) return;
+    
+    // 获取当前用户手机号
+    const phoneNumber = wx.getStorageSync('phoneNumber');
+    const userInfo = wx.getStorageSync('userInfo');
+    const openid = userInfo ? userInfo.openid : '';
+    
+    if (!phoneNumber && !openid) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      return;
+    }
+    
     const message = { messageId: null, from: 0, content, time: Date.now(), read: true };
     messages.push(message);
     this.setData({ input: '', messages });
+    
+    // 发送到WebSocket
     socket.send(JSON.stringify({ type: 'message', data: { userId, content } }));
+    
+    // 保存消息到云数据库，与手机号绑定
+    try {
+      const db = wx.cloud.database();
+      const messageData = {
+        id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        userId: phoneNumber || openid, // 使用手机号作为主要标识，openid作为备用
+        phoneNumber: phoneNumber, // 明确保存手机号
+        openid: openid, // 保存openid
+        targetUserId: userId, // 消息接收方
+        type: 'user',
+        name: '我',
+        avatar: this.data.myAvatar,
+        content: content,
+        lastMessage: content,
+        isRead: false,
+        createdAt: new Date()
+      };
+      
+      await db.collection('messages').add({
+        data: messageData
+      });
+      
+
+    } catch (error) {
+
+      // 即使保存失败，也不影响界面显示
+    }
+    
     wx.nextTick(this.scrollToBottom);
   },
 

@@ -1,0 +1,62 @@
+<t-navbar title="报名问卷">
+  <t-icon slot="left" name="chevron-left" size="48rpx" bind:tap="onBack" />
+</t-navbar>
+<view class="page">
+  <view class="qn-container">
+    <view class="qn-header">
+      <t-button theme="primary" size="small" bind:tap="onAddField">新增问题</t-button>
+      <text class="qn-summary">{{fields.length}} 项</text>
+    </view>
+    <view class="qn-meta">
+      <view class="qn-meta-item">
+        <text class="qn-meta-label">需要用户真实姓名</text>
+        <t-switch value="{{needRealName}}" bind:change="onToggleRealName" />
+      </view>
+      <view class="qn-meta-item">
+        <text class="qn-meta-label">需要用户手机号码</text>
+        <t-switch value="{{needPhoneNumber}}" bind:change="onTogglePhoneNumber" />
+      </view>
+    </view>
+    <view wx:for="{{fields}}" wx:key="id" class="qn-card">
+      <view class="qn-top-row">
+        <view class="qn-num">
+          <text class="qn-number">{{index + 1 < 10 ? ('0' + (index + 1)) : (index + 1)}}</text>
+          <text wx:if="{{item.required}}" class="req-star">*</text>
+        </view>
+        <t-input value="{{item.title}}" placeholder="请输入题目标题" bind:change="onTitleChange" data-index="{{index}}" />
+        <view class="qn-required-inline">
+          <text>必填</text>
+          <t-switch value="{{item.required}}" bind:change="onRequiredChange" data-index="{{index}}" />
+        </view>
+      </view>
+
+      <t-input value="{{item.desc}}" placeholder="请输入题目说明（选填）" bind:change="onDescChange" data-index="{{index}}" />
+
+      <view class="qn-type-row">
+        <t-radio-group value="{{item.type}}" bind:change="onTypeChange" data-index="{{index}}">
+          <t-radio value="single" label="单选" />
+          <t-radio value="multi" label="多选" />
+          <t-radio value="text" label="填空" />
+        </t-radio-group>
+      </view>
+
+      <block wx:if="{{item.type === 'single' || item.type === 'multi'}}">
+        <view wx:for="{{item.options}}" wx:for-index="optIndex" wx:key="optIndex" class="qn-option-box">
+          <view class="opt-letter">{{item.label}}</view>
+          <t-input value="{{item.value}}" placeholder="选项" bind:change="onOptionChange" data-index="{{index}}" data-opt-index="{{optIndex}}" />
+          <t-button class="qn-option-del" size="small" theme="danger" bind:tap="onRemoveOption" data-index="{{index}}" data-opt-index="{{optIndex}}">删除</t-button>
+        </view>
+        
+      </block>
+      <view class="qn-card-actions{{item.type === 'text' ? ' single' : ''}}">
+        <t-button ext-class="action-btn" size="small" theme="primary" bind:tap="onAddOption" data-index="{{index}}" wx:if="{{item.type === 'single' || item.type === 'multi'}}">添加选项</t-button>
+        <t-button ext-class="action-btn qn-delete-btn" size="small" theme="danger" bind:tap="onDeleteField" data-index="{{index}}">删除问题</t-button>
+      </view>
+
+    </view>
+  </view>
+  <view class="qn-footer">
+    <t-button theme="primary" block bind:tap="onSave">保存问卷</t-button>
+  </view>
+  <view class="qn-after-footer-spacer"></view>
+</view>

@@ -1,26 +1,162 @@
-<view class="message-page">
-  <t-navbar title="消息" />
-  <view class="message-container">
-    <t-pull-down-refresh value="{{isRefreshing}}" bindrefresh="onRefresh">
-      <block wx:if="{{messageList && messageList.length > 0}}">
-        <view class="message-list">
-          <view class="message-item" wx:for="{{messageList}}" wx:key="id" bindtap="onMessageTap" data-id="{{item.id}}">
-            <t-avatar image="{{item.avatar}}" size="large">
-              <t-icon wx:if="{{item.type === 'system'}}" name="notification" size="24" slot="icon" style="color: #0052d9;" />
-            </t-avatar>
-            <view class="message-content">
-              <view class="message-header">
-                <text class="name">{{item.name}}</text>
-                <text class="time">{{item.time}}</text>
-              </view>
-              <view class="message-text">{{item.lastMessage}}</view>
-            </view>
-          </view>
+<wxs module="utils">
+  function formatTime(date) {
+    if (!date) return '暂无时间';
+    
+    console.log('formatTime input:', date, 'type:', typeof date);
+    
+    var now = getDate();
+    var msgDate;
+    
+    // 简化处理逻辑，直接尝试不同方式创建Date对象
+     if (typeof date === 'object' && date && date.getTime && typeof date.getTime === 'function') {
+       // 直接是Date对象
+       msgDate = date;
+       console.log('使用原生Date对象');
+     } else if (typeof date === 'object' && date && date['$date']) {
+       // 云数据库格式
+       msgDate = getDate(date['$date']);
+       console.log('使用云数据库格式');
+     } else if (typeof date === 'object' && date) {
+       // 处理序列化的Date对象，尝试多种方式
+       console.log('处理序列化对象:', date);
+       var dateStr = date.toString();
+       if (dateStr && dateStr !== '[object Object]') {
+         msgDate = getDate(dateStr);
+         console.log('使用toString转换');
+       } else {
+         // 尝试valueOf或其他属性
+         if (date.valueOf && typeof date.valueOf === 'function') {
+           var timestamp = date.valueOf();
+           if (!isNaN(timestamp)) {
+             msgDate = getDate(timestamp);
+             console.log('使用valueOf转换');
+           }
+         }
+       }
+     } else if (typeof date === 'number') {
+       // 数字时间戳
+       msgDate = getDate(date);
+       console.log('使用数字时间戳');
+     } else if (typeof date === 'string') {
+       // 字符串格式
+       msgDate = getDate(date);
+       console.log('使用字符串格式');
+     }
+     
+     if (!msgDate) {
+       console.log('所有转换方式都失败，返回错误');
+       return '时间格式错误';
+     }
+    
+    console.log('msgDate:', msgDate, 'valid:', msgDate && !isNaN(msgDate.getTime()));
+    
+    if (!msgDate || isNaN(msgDate.getTime())) {
+      return '时间格式错误';
+    }
+    
+    var msgTime = msgDate.getTime();
+    var nowTime = now.getTime();
+    var diff = nowTime - msgTime;
+    
+    // 一分钟内
+    if (diff < 60000) {
+      return '刚刚';
+    }
+    
+    // 一小时内
+    if (diff < 3600000) {
+      return Math.floor(diff / 60000) + '分钟前';
+    }
+    
+    // 一天内
+    if (diff < 86400000) {
+      return Math.floor(diff / 3600000) + '小时前';
+    }
+    
+    // 超过一天，显示日期
+    var month = msgDate.getMonth() + 1;
+    var day = msgDate.getDate();
+    var year = msgDate.getFullYear();
+    var currentYear = now.getFullYear();
+    
+    // 检查日期值是否有效
+    if (isNaN(month) || isNaN(day) || isNaN(year)) {
+      return '时间格式错误';
+    }
+    
+    // 同一年只显示月日
+    if (year === currentYear) {
+      return (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+    }
+    
+    // 不同年份显示完整日期
+    return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+  }
+  
+  module.exports = {
+    formatTime: formatTime
+  };
+</wxs>
+
+<view class="page">
+  <!-- 导航栏 -->
+  <nav title-text="消息" />
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <t-loading theme="circular" size="40rpx" text="加载中..." />
+  </view>
+  
+  <!-- 空状态 -->
+  <view wx:elif="{{isEmpty}}" class="empty-container">
+    <view class="empty-icon">📭</view>
+    <view class="empty-text">{{ showLoginGuide ? '登录后即可获取消息' : '暂无消息' }}</view>
+    <view class="empty-desc" wx:if="{{!showLoginGuide}}">您的系统消息将在这里显示</view>
+    <button wx:if="{{showLoginGuide}}" class="login-guide-btn" bindtap="goLoginWithFrom">去登录</button>
+  </view>
+  
+  <!-- 消息列表 -->
+  <view wx:else class="message-container">
+    <t-pull-down-refresh
+      value="{{refreshing}}"
+      bind:refresh="onRefresh"
+      loadingTexts="{{['下拉刷新', '松手刷新', '正在刷新', '刷新完成']}}"
+    >
+      <scroll-view scroll-y style="height: 100%;" show-scrollbar="{{false}}">
+        <view wx:for="{{messages}}" 
+          wx:key="_id" 
+          class="message-item"
+          data-message="{{item}}"
+          data-id="{{item._id}}"
+          bindtap="onMessageTap"
+          bindlongpress="onLongPress"
+        >
+        <view class="message-avatar">
+          <t-icon wx:if="{{item.title === '活动推荐通知'}}" name="heart" size="48rpx" color="#0052D9" class="avatar-icon" />
+          <t-icon wx:elif="{{item.type === 'activity_notification'}}" name="calendar" size="48rpx" color="#0052D9" class="avatar-icon" />
+          <t-icon wx:else name="notification" size="48rpx" color="#0052D9" class="avatar-icon" />
         </view>
-      </block>
-      <block wx:else>
-        <t-empty icon="chat" description="暂无消息" />
-      </block>
+        
+        <view class="message-content">
+          <view class="message-header">
+            <view class="message-name">{{item.title || item.name || '系统消息'}}</view>
+            <view class="message-time">{{formatTime.formatTime(item.createdAt)}}</view>
+          </view>
+          
+          <view class="message-text">{{item.content || item.lastMessage}}</view>
+        </view>
+        
+        <view wx:if="{{item.title === '活动更新通知' || item.title === '活动推荐通知'}}" class="message-arrow">
+          <view wx:if="{{!item.isRead}}" class="arrow-unread-dot"></view>
+          <t-icon name="chevron-right" size="32rpx" color="#ccc" />
+        </view>
+        
+        <!-- 不可跳转消息的红点 -->
+        <view wx:elif="{{!item.isRead}}" class="message-unread-dot"></view>
+        </view>
+      </scroll-view>
     </t-pull-down-refresh>
   </view>
+  
+
 </view>

@@ -4,12 +4,95 @@
   background-color: #f5f5f5;
 }
 
+.custom-back { padding: 0 24rpx; display: flex; align-items: center; }
+
 .release-container {
   margin-top: 20rpx;
 }
 
+.advanced-popup {}
+.advanced-header {}
+.advanced-body {}
+.adv-item {}
+.adv-item-col {}
+.adv-label {}
+.edu-tags {}
+.edu-tag {}
+.edu-tag.checked {}
+.hint-text {}
+.advanced-footer {}
+.advanced-footer .t-button {}
+.advanced-entry-title {}
+.advanced-entry-row {}
+.edu-filter-list {}
+.edu-filter-card {}
+.card-header {}
+.card-title {}
+.card-header .t-button {}
+.delete-btn {}
+.card-field {}
+.field-label {}
+.field-value {}
+.picker-value {}
+.filter-add {}
+
 .panel-item {
   margin-bottom: 32rpx;
+}
+.help-icon { margin-left: 12rpx; color: #999999; }
+.title-row {
+  margin-bottom: 0 !important;
+  padding-top: 6rpx !important;
+  padding-bottom: 0 !important;
+}
+.compact-cell {
+  padding-top: 6rpx !important;
+  padding-bottom: 0 !important;
+}
+
+/* 详细地址样式 */
+.address-container {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx 32rpx;
+  margin-bottom: 32rpx;
+  border: 1rpx solid #e6e6e6;
+}
+
+.address-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.address-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40rpx;
+}
+
+.address-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #999;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: normal;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 40rpx);
+}
+
+.address-text:not(:empty) {
+  color: #666;
+}
+
+.address-arrow {
+  font-size: 28rpx;
+  color: #ccc;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 /* 移除单选按钮边框 */
@@ -48,12 +131,212 @@
 
 /* 报名限制单选按钮组样式 */
 t-cell[title="报名限制"] .t-radio-group {
-  margin-left: 32rpx;
+  /* 保持右侧布局，不做左侧缩进 */
+  margin-left: 0 !important;
+}
+
+/* 报名限制纵向排列样式 */
+.radio-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16rpx !important;
+  /* 纵向时将横向对齐到最右边 */
+  align-items: flex-end !important;
+  width: 100% !important;
+  text-align: right !important;
+}
+
+/* 保证纵向单选项在右侧稳定对齐 */
+.radio-vertical .t-radio {
+  display: flex !important;
+  margin: 0 !important;
+  width: 100% !important;            /* 每行占满可用宽度 */
+  justify-content: flex-end !important; /* 内容贴右对齐 */
+}
+.radio-vertical .t-radio__content {
+  width: auto !important;
+  flex: 0 0 auto !important;           /* 取消默认 flex:1 拉伸 */
+  display: inline-flex !important;     /* 保持与图标同排 */
+}
+
+/* 图标与文字贴紧，避免被内容拉开 */
+.radio-vertical .t-radio__icon {
+  flex: 0 0 auto !important;
+  margin-right: 12rpx !important;      /* 与文字留少量间距 */
+}
+
+/* 保证“报名限制”两项始终贴右且不因选中态移位 */
+.radio-group-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  width: 100% !important;
+}
+.radio-group-vertical .t-radio-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16rpx !important;
+  align-items: flex-end !important;
+  width: 100% !important;            /* 容器占满以便内部可贴右 */
+}
+.radio-group-vertical .t-radio-group {
+  width: auto !important;
+}
+.radio-group-vertical .t-radio {
+  align-self: stretch !important;     /* 让每项拉伸到整行 */
+  width: 100% !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  justify-content: flex-end !important; /* 每项内容靠右 */
+}
+
+/* 组内内容不再占满，图标与文字并排紧贴 */
+.radio-group-vertical .t-radio__content {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+}
+.radio-group-vertical .t-radio__icon {
+  flex: 0 0 auto !important;
+  margin-right: 12rpx !important;
+}
+
+/* 学校标签组：多行换行显示 */
+.school-tags-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 16rpx !important;
+  margin-top: 16rpx !important;
+  justify-content: flex-end !important; /* 多行右对齐 */
+  margin-left: auto !important; /* 强制整体靠右 */
+}
+
+/* 学校标签胶囊样式（强制覆盖组件默认样式） */
+.school-tags-group .t-radio {
+  margin: 0 !important;
+  padding: 12rpx 24rpx !important;
+  background-color: #f5f5f5 !important;
+  border-radius: 9999rpx !important;
+  border: none !important;
+}
+
+/* 学校标签容器右对齐，保持与上方单选组一致 */
+.school-tags-container {
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+  text-align: right !important;
+}
+
+.school-tags-group .t-radio__icon,
+.school-tags-group .t-radio__border {
+  display: none !important;
+}
+
+.school-tags-group .t-radio__content {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.school-tags-group .t-radio .t-radio__label {
+  color: #666666 !important;
+  font-size: 20rpx !important;
+  line-height: 1 !important;
+}
+
+.school-tags-group .activity-type-tag-label {
+  font-size: 20rpx !important;
+  line-height: 1 !important;
+}
+
+.school-tags-group .t-radio {
+  font-size: 20rpx !important;
+}
+
+.school-tags-group .t-radio.t-is-checked {
+  background-color: #0052d9 !important;
+}
+
+.school-tags-group .t-radio.t-is-checked .t-radio__label {
+  color: #ffffff !important;
+}
+
+/* 兜底容器：当 t-class 未生效时使用 wrapper 提供样式作用域 */
+.school-tags-container .t-radio-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 16rpx !important;
+}
+
+.school-tags-container .t-radio {
+  margin: 0 !important;
+  padding: 12rpx 24rpx !important;
+  background-color: #f5f5f5 !important;
+  border-radius: 9999rpx !important;
+  border: none !important;
+}
+
+.school-tags-container .t-radio__icon,
+.school-tags-container .t-radio__border {
+  display: none !important;
+}
+
+.school-tags-container .t-radio__content {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.school-tags-container .t-radio .t-radio__label {
+  color: #666666 !important;
+  font-size: 20rpx !important;
+  line-height: 1 !important;
+}
+
+.school-tags-container .activity-type-tag-label {
+  font-size: 20rpx !important;
+  line-height: 1 !important;
+}
+
+.school-tags-container .t-radio {
+  font-size: 20rpx !important;
+}
+
+.school-tags-container .t-radio.t-is-checked {
+  background-color: #0052d9 !important;
+}
+
+.school-tags-container .t-radio.t-is-checked .t-radio__label {
+  color: #ffffff !important;
+}
+
+/* 自定义学校标签胶囊（替代 t-radio 实现，确保可点击高亮） */
+.school-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 12rpx 24rpx !important;
+  margin: 0 !important;
+  background-color: #f5f5f5 !important;
+  border-radius: 9999rpx !important;
+  color: #666666 !important;
+  font-size: 20rpx !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.school-tag.is-checked {
+  background-color: #0052d9 !important;
+  color: #ffffff !important;
 }
 
 /* 活动介绍文本框样式 */
 .t-textarea .t-textarea__wrapper-inner {
   font-size: 28rpx;
+}
+.t-textarea__label {
+  font-weight: normal !important;
+}
+.textarea-label {
+  font-weight: normal !important;
 }
 
 /* 上传组件样式 */
@@ -71,6 +354,24 @@ t-cell[title="报名限制"] .t-radio-group {
   color: #333;
 }
 
+/* 让上传区标题与其它标题样式保持一致 */
+.upload-wrapper .cell-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  white-space: nowrap;
+  margin-bottom: 32rpx;
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.upload-wrapper .cell-title text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
 /* 群聊二维码上传样式 */
 .qrcode-upload-container {
   display: flex;
@@ -79,9 +380,44 @@ t-cell[title="报名限制"] .t-radio-group {
   width: 100%;
 }
 
+/* 活动图片/海报上传样式 */
+.poster-upload-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.poster-note {
+  font-size: 18rpx !important;
+  color: #999 !important;
+  white-space: nowrap !important;
+}
+
+.t-cell__note .poster-note {
+  font-size: 18rpx !important;
+  color: #999 !important;
+}
+
+.t-cell__note.poster-note {
+  font-size: 18rpx !important;
+}
+
+.poster-note-scale {
+  display: inline-block !important;
+  transform: scale(1.0);
+  transform-origin: left center;
+}
+
 .qrcode-upload-container .t-upload {
   width: 160rpx;
   height: 160rpx;
+}
+
+/* 学校选择文本样式 */
+.school-select-text {
+  font-size: 28rpx;
+  color: #666;
+  width: 100% !important;
+  text-align: right !important; /* 单一学校文本右对齐 */
 }
 
 /* 提交按钮样式 */
@@ -91,6 +427,82 @@ t-cell[title="报名限制"] .t-radio-group {
   width: 90% !important;
   margin-left: auto;
   margin-right: auto;
+}
+
+.qn-note {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.qn-count {
+  color: #666;
+  font-size: 20rpx !important;
+}
+
+.required-wrapper {
+  position: relative;
+}
+.required-star {
+  position: absolute;
+  right: 16rpx;
+  top: 24rpx;
+  color: #FF3B30 !important;
+  font-size: 28rpx;
+}
+.required-star-inline {
+  color: #FF3B30 !important;
+  margin-left: 8rpx;
+}
+.field-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32rpx;
+  margin-bottom: 4rpx !important;
+  color: #333;
+}
+.cell-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12rpx !important;
+  white-space: nowrap !important;
+}
+.title-inline { display: inline-flex !important; align-items: center !important; gap: 12rpx !important; white-space: nowrap !important; }
+.cell-title .help-icon.inline { display: inline-block !important; vertical-align: middle !important; }
+.title-inline text { display: inline-block !important; vertical-align: middle !important; }
+.title-inline .t-icon { display: inline-block !important; vertical-align: middle !important; }
+.cell-note-fill {
+  width: 100% !important;
+  display: block !important;
+}
+.input-row {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 0 32rpx;
+}
+.input-row.tight {
+  margin-top: 0 !important;
+  padding-top: 2rpx !important;
+}
+.input-row .t-input,
+.input-row .t-textarea {
+  width: 100% !important;
+}
+.required-input .t-input__label::after {
+  content: '*';
+  color: #FF3B30 !important;
+  margin-left: 8rpx;
+}
+.required-input .t-input__label {
+  margin-bottom: 4rpx !important;
+}
+.required-textarea .t-textarea__label::after {
+  content: '*';
+  color: #FF3B30 !important;
+  margin-left: 8rpx;
+}
+.required-textarea .t-textarea__label {
+  margin-bottom: 4rpx !important;
 }
 
 /* 城市选择器样式 */
@@ -137,9 +549,9 @@ t-cell[title="报名限制"] .t-radio-group {
 /* 活动类型标签样式 */
 .t-radio.activity-type-tag {
   margin: 0 !important; /* 移除默认外边距 */
-  padding: 10rpx 20rpx !important; /* 调整内边距 */
+  padding: 12rpx 24rpx !important; /* 调整内边距为更明显的胶囊样式 */
   background-color: #f5f5f5 !important; /* 未选中背景色 */
-  border-radius: 16rpx !important; /* 圆角 */
+  border-radius: 9999rpx !important; /* 胶囊圆角 */
   border: none !important; /* 移除边框 */
 }
 
@@ -151,6 +563,7 @@ t-cell[title="报名限制"] .t-radio-group {
 .t-radio.activity-type-tag .t-radio__label {
   color: #666666 !important; /* 未选中文字颜色 */
   font-size: 26rpx !important; /* 文字大小 */
+  line-height: 1 !important; /* 紧凑行高 */
 }
 
 .t-radio.activity-type-tag.t-is-checked .activity-type-tag-label,
@@ -187,9 +600,11 @@ t-cell[title="报名限制"] .t-radio-group {
 
 /* 分隔线样式 */
 .separator-line {
-  height: 1rpx;
-  background-color: #e7e7e7;
-  margin: 0 32rpx;
+  display: block;
+  width: 100%;
+  height: 0;
+  border-top: 1px solid #e5e5e5;
+  margin: 16rpx 0;
 }
 
 /* 提示信息 */
@@ -225,3 +640,16 @@ t-cell[title="报名限制"] .t-radio-group {
   transform: translateX(-50%);
   z-index: 1001;
 } */
+.questionnaire-cell .t-cell__title { display: flex !important; align-items: center !important; gap: 12rpx !important; }
+.questionnaire-cell .t-cell__title text { display: inline-block !important; }
+.questionnaire-cell .t-cell__title .t-icon { display: inline-block !important; }
+.poster-inline-note {
+  font-size: 20rpx !important;
+  color: #999 !important;
+}
+
+/* 强化选择器，确保覆盖组件默认标题样式 */
+.t-cell__title .poster-inline-note {
+  font-size: 20rpx !important;
+  color: #999 !important;
+}

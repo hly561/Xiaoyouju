@@ -2,9 +2,17 @@
   "pages": [
     "pages/home/index",
     "pages/my/index",
+    "pages/my/circles/index",
     "pages/activity-detail/index",
+    "pages/activity-detail/questionnaire-detail/index",
     "pages/city-selector/index",
-    "pages/message/index"
+    "pages/message/index",
+    "pages/review/index",
+    "pages/my/organized-activities/index",
+    "pages/my/participated-activities/index",
+    "pages/contact-us/index",
+    "pages/certification/index",
+    "pages/certification/certification-form/index"
   ],
   "useExtendedLib": {
     "weui": true
@@ -12,19 +20,21 @@
   "usingComponents": {
     "t-toast": "tdesign-miniprogram/toast/toast"
   },
-  "plugins": {
-    "chooseLocation": {
-      "version": "1.0.12",
-      "provider": "wx76a9a06e5b4e693e"
-    }
-  },
+
   "permission": {
     "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序定位"
+    },
+    "scope.userFuzzyLocation": {
       "desc": "你的位置信息将用于小程序定位"
     }
   },
   "requiredPrivateInfos": [
-    "getLocation"
+    "getFuzzyLocation",
+    "chooseLocation"
+  ],
+  "requiredBackgroundModes": [
+    "location"
   ],
   "subpackages": [
     {
@@ -48,9 +58,9 @@
       "pages": ["login"]
     },
     {
-      "root": "pages/loginCode",
-      "name": "loginCode",
-      "pages": ["loginCode"]
+      "root": "pages/school-selector",
+      "name": "school",
+      "pages": ["index"]
     },
     {
       "root": "pages/dataCenter",
@@ -60,19 +70,26 @@
     {
       "root": "pages/release",
       "name": "release",
-      "pages": ["index"]
+      "pages": ["index", "questionnaire/index"]
     },
     {
       "root": "pages/my/verify",
       "name": "verify",
       "pages": ["index"]
+    },
+    {
+      "root": "pages/interests",
+      "name": "interests",
+      "pages": ["index"]
     }
+    
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "disableSwipeBack": true
   },
   "tabBar": {
     "custom": true,

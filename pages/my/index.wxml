@@ -5,11 +5,11 @@
   <nav title-text="我的" />
   <view class="my-info">
     <t-cell-group>
-      <t-cell wx:if="{{isLoad}}" bordered="{{false}}">
+      <t-cell wx:if="{{isLoad}}" bordered="{{false}}" t-class-center="cell-class-center">
         <t-avatar image="{{personalInfo.image}}" slot="left-icon" size="large" />
         <view class="my-info__person" slot="description">
           <view class="name">{{personalInfo.name}}</view>
-          <view class="auth-status">认证状态：{{personalInfo.authStatus || '未认证'}}</view>
+          
         </view>
         <t-icon slot="right-icon" name="edit" size="40rpx" color="#000000e6" bindtap="onNavigateTo" />
       </t-cell>
@@ -39,15 +39,42 @@
     </t-grid>
   </view>
 
+  <!-- 审核中心单独卡片 -->
+  <view wx:if="{{personalInfo.role === 'school_manager' || personalInfo.role === 'general_manager'}}" style="margin-top: 24rpx; padding: 0 32rpx;">
+    <view style="border-radius: 20rpx; overflow: hidden; box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.06); background: #fff;">
+      <t-cell
+        title="审核中心"
+        leftIcon="check-circle"
+        hover
+        arrow
+        bordered
+        data-data="{{ { name: '审核中心', icon: 'check-circle', type: 'review', url: '/pages/review/index' } }}"
+        bindclick="onEleClick"
+      >
+        <view slot="right-icon" wx:if="{{pendingCount > 0}}" class="pending-dot">
+          <text>{{pendingCount > 99 ? '···' : pendingCount}}</text>
+        </view>
+      </t-cell>
+    </view>
+  </view>
 
-
-  <view class="setting-group">
-
-    <t-cell-group theme="card">
+  <!-- 校友认证+我的兴趣+联系客服+退出登录 合并卡片 -->
+  <view style="margin-top: 24rpx; padding: 0 32rpx;">
+    <view style="border-radius: 20rpx; overflow: hidden; box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.06); background: #fff;">
+      <t-cell
+        title="校友认证"
+        leftIcon="verified"
+        hover
+        arrow
+        bordered
+        data-data="{{ { name: '校友认证', icon: 'verified', type: 'verify' } }}"
+        bindclick="onEleClick"
+      />
       <t-cell
         wx:for="{{settingList}}"
         wx:for-item="item"
         wx:key="type"
+        wx:if="{{item.type === 'interests' || item.type === 'contact' || item.type === 'logout'}}"
         title="{{item.name}}"
         leftIcon="{{item.icon}}"
         hover
@@ -55,7 +82,7 @@
         data-data="{{item}}"
         bindclick="onEleClick"
       />
-    </t-cell-group>
+    </view>
   </view>
 </view>
-<wxs src="./index.wxs" module="status" />
+<!-- 移除未使用的 WXS 模块，避免编译错误 -->

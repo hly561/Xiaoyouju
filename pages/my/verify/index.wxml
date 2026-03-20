@@ -1,25 +1,49 @@
 <view class="verify-container">
+  <!-- 学历卡片列表展示（已移除，仅保留表单） -->
   <view class="form-group">
     <view class="form-item">
-      <text class="label">姓名</text>
-      <input class="input" placeholder="请输入姓名" value="{{formData.realname}}" data-field="realname" bindinput="onInputChange" />
+      <view class="form-item-content">
+        <text class="label">姓名</text>
+        <input class="input" placeholder="请输入姓名" value="{{formData.realname}}" data-field="realname" bindinput="onInputChange" />
+      </view>
     </view>
 
     <view class="form-item">
-      <text class="label">毕业学校</text>
-      <input class="input" placeholder="请输入毕业学校" value="{{formData.school}}" data-field="school" bindinput="onInputChange" />
+      <view class="form-item-content">
+        <text class="label">学历</text>
+        <picker class="picker" mode="selector" range="{{degreeOptions}}" value="{{degreeIndex}}" bindchange="onInputChange" data-field="degree">
+          <text class="picker-text {{formData.degree ? 'selected' : 'placeholder'}}">{{formData.degree || '请选择学历'}}</text>
+        </picker>
+      </view>
     </view>
 
     <view class="form-item">
-      <text class="label">专业</text>
-      <input class="input" placeholder="请输入专业" value="{{formData.major}}" data-field="major" bindinput="onInputChange" />
+      <view class="form-item-content">
+        <text class="label">毕业学校</text>
+        <view class="school-selector" bindtap="onSelectSchool" style="flex: 1; padding: 0 16rpx; height: 80rpx; background-color: #f8f8f8; border-radius: 8rpx; display: flex; align-items: center;">
+           <text class="school-text {{!formData.school ? 'placeholder' : ''}}" style="font-size: 14px; color: {{formData.school ? '#333' : '#888'}}; flex: 1; margin-left: 8rpx;">{{formData.school || '请选择学校'}}</text>
+         </view>
+      </view>
+      <view class="school-help-text" style="display: flex; align-items: center; margin-top: 12rpx; margin-left: 0rpx;" bindtap="onSchoolNotFound">
+        <t-icon name="help-circle" size="20rpx" color="#1976d2" />
+        <text style="font-size: 20rpx; color: #1976d2; margin-left: 8rpx;">没有找到我的学校</text>
+      </view>
     </view>
 
     <view class="form-item">
-      <text class="label">毕业年份</text>
-      <picker class="picker" mode="selector" range="{{years}}" value="{{selectedYearIndex}}" bindchange="onInputChange" data-field="graduationYear">
-        <view class="picker-text">{{formData.graduationYear || '请选择毕业年份'}}</view>
-      </picker>
+      <view class="form-item-content">
+        <text class="label">专业</text>
+        <input class="input" placeholder="请输入专业" value="{{formData.major}}" data-field="major" bindinput="onInputChange" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <view class="form-item-content">
+        <text class="label">毕业年份</text>
+        <picker class="picker" mode="selector" range="{{years}}" value="{{selectedYearIndex}}" bindchange="onInputChange" data-field="graduationYear">
+          <view class="picker-text {{formData.graduationYear ? 'selected' : 'placeholder'}}">{{formData.graduationYear || '请选择毕业年份'}}</view>
+        </picker>
+      </view>
     </view>
 
     <view class="form-item">
@@ -31,7 +55,7 @@
           <text class="upload-text">上传图片</text>
         </view>
       </view>
-      <text class="upload-tip">请上传学生证、毕业证、学位证、学信网等相关证明材料</text>
+      <text class="upload-tip">若为毕业生，请上传学生证、毕业证、学位证、学信网等证明材料其中之一；若为在校生，请上传学生证、校园卡、录取通知书等证明材料其中之一。</text>
     </view>
   </view>
 

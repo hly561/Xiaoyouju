@@ -1,0 +1,29 @@
+<view class="qn-detail-page">
+  <view wx:if="{{loading}}" class="state-text">加载中...</view>
+  <view wx:elif="{{!participants.length}}" class="state-text">暂无报名问卷数据</view>
+  <scroll-view wx:else scroll-y="true" class="participant-list">
+    <block wx:for="{{participants}}" wx:key="phone">
+    <view wx:if="{{item.answerList && item.answerList.length}}" class="participant-card">
+      <view class="participant-top">
+        <view class="participant-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" />
+          <view wx:else class="avatar-placeholder">{{item.nickname ? item.nickname.substring(0,1) : '用'}}</view>
+        </view>
+        <view class="participant-info">
+          <view class="participant-nickname">{{item.nickname || '未填写昵称'}}</view>
+          <view class="participant-time" wx:if="{{item.submittedText}}">
+            提交时间：{{item.submittedText}}
+          </view>
+        </view>
+      </view>
+      <view class="field-list" wx:if="{{item.answerList.length}}">
+        <view class="field-item" wx:for="{{item.answerList}}" wx:for-item="field" wx:key="id">
+          <view class="field-title">{{field.title}}</view>
+          <view class="field-value">{{field.value}}</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </scroll-view>
+</view>
+

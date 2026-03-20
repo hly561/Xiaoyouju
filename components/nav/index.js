@@ -82,11 +82,9 @@ Component({
     },
     attached() {
       // 获取本地存储的城市信息
-      const selectedProvince = wx.getStorageSync('selectedProvince');
       const selectedCity = wx.getStorageSync('selectedCity');
-      if (selectedProvince) {
+      if (selectedCity) {
         this.setData({
-          selectedProvince,
           selectedCity
         });
       }
@@ -108,6 +106,18 @@ Component({
     itemClick(e) {
       const that = this;
       const { isSidebar, url } = e.detail.item;
+      // 切换到 Tab 或普通页面前，主动刷新未读数与红点状态，提升跨页“实时”表现
+      try {
+        const app = getApp();
+        if (app && typeof app.getUnreadNum === 'function') {
+          app.getUnreadNum();
+        }
+        if (app && typeof app.updateUserMessageAllreadStatus === 'function') {
+          app.updateUserMessageAllreadStatus();
+        }
+      } catch (err) {
+        console.warn('导航前刷新消息红点失败:', err);
+      }
       if (isSidebar) {
         wx.switchTab({
           url: `/${url}`,

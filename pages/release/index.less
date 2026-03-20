@@ -16,7 +16,7 @@
     color: #999999;
   }
 
-  .t-radio-group {
+  .t-radio-group:not(.radio-vertical) {
     display: flex;
     flex-direction: row;
     gap: 32rpx;
@@ -28,8 +28,180 @@
     }
   }
 
+  /* 报名限制纵向排列（右对齐） */
+  .radio-group-vertical {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+    flex: 1 1 auto !important;
+    box-sizing: border-box !important;
+    padding-right: 24rpx !important; /* 轻微左移，避免过贴右边 */
+  }
+
+  .radio-group-vertical .t-radio-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16rpx !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+  }
+
+  .radio-group-vertical .t-radio {
+    align-self: stretch !important;
+    width: 100% !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+
+  .radio-group-vertical .t-radio__content {
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+  }
+
+  .radio-group-vertical .t-radio__icon {
+    flex: 0 0 auto !important;
+    margin-right: 12rpx !important;
+  }
+
+  .radio-vertical {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16rpx !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+    text-align: right !important;
+    box-sizing: border-box !important;
+    padding-right: 24rpx !important; /* 与上方单选组保持同一右内边距 */
+  }
+
+  .radio-vertical .t-radio {
+    display: flex !important;
+    margin: 0 !important;
+    width: 100% !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+
+  .radio-vertical .t-radio__content {
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+  }
+
+  .radio-vertical .t-radio__icon {
+    flex: 0 0 auto !important;
+    margin-right: 12rpx !important;
+  }
+
   .submit-btn {
     margin: 24rpx 32rpx;
+  }
+
+  /* 学校标签容器与组：确保可换行并呈现胶囊样式 */
+  .school-tags-container {
+    margin-top: 16rpx;
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 24rpx !important; /* 标签整体轻微左移 */
+
+    .t-radio-group {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 16rpx !important;
+    }
+
+    .t-radio {
+      margin: 0 !important;
+      padding: 12rpx 24rpx !important;
+      background-color: #f5f5f5 !important;
+      border-radius: 9999rpx !important;
+      border: none !important;
+    }
+
+    .t-radio__icon,
+    .t-radio__border {
+      display: none !important;
+    }
+
+    .t-radio__content {
+      padding-left: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    .t-radio .t-radio__label {
+      color: #666666 !important;
+      font-size: 20rpx !important;
+      line-height: 1 !important;
+    }
+
+    .activity-type-tag-label {
+      font-size: 20rpx !important;
+      line-height: 1 !important;
+    }
+
+    /* 兜底：直接作用在 t-radio 上以提升优先级 */
+    .t-radio {
+      font-size: 20rpx !important;
+    }
+
+    .t-radio.t-is-checked {
+      background-color: #0052d9 !important;
+    }
+
+    .t-radio.t-is-checked .t-radio__label {
+      color: #ffffff !important;
+    }
+  }
+
+  /* 若直接通过 t-class 作用在 radio-group，则同样应用胶囊布局 */
+  .school-tags-group {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16rpx !important;
+    margin-top: 16rpx !important;
+    justify-content: flex-end !important;
+    margin-left: auto !important;
+  }
+
+  /* 单一学校只读文本与右侧对齐并左移一点 */
+  .school-select-text {
+    width: 100% !important;
+    text-align: right !important;
+    box-sizing: border-box !important;
+    padding-right: 24rpx !important;
+  }
+
+  .school-tags-group .t-radio .t-radio__label,
+  .school-tags-group .activity-type-tag-label {
+    font-size: 20rpx !important;
+  }
+
+  .school-tags-group .t-radio {
+    font-size: 20rpx !important;
+  }
+
+  /* 自定义学校标签胶囊（替代 t-radio 实现，确保可点击高亮） */
+  .school-tag {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 12rpx 24rpx !important;
+    margin: 0 !important;
+    background-color: #f5f5f5 !important;
+    border-radius: 9999rpx !important;
+    color: #666666 !important;
+    font-size: 20rpx !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .school-tag.is-checked {
+    background-color: #0052d9 !important;
+    color: #ffffff !important;
   }
 
   &.panel-item {
@@ -45,6 +217,8 @@
     padding-bottom: 8rpx !important; /* Reduce bottom padding */
   }
 }
+
+
 
 /* 城市选择器样式 */
 .city-picker {

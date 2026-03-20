@@ -1,9 +1,4 @@
 .my-info {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
   background-color: #fff;
 }
 
@@ -29,6 +24,26 @@
 }
 
 .setting-group {
-  margin-top: 400rpx;
-  background-color: red;
+  margin-top: 120rpx;
+}
+
+.setting-group t-cell,
+.setting-group t-cell-group {
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.pending-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36rpx;
+  height: 36rpx;
+  background: #f44;
+  color: #fff;
+  border-radius: 18rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  margin-left: 16rpx;
+  padding: 0 10rpx;
 }

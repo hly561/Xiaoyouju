@@ -1,0 +1,284 @@
+.page {
+  padding: 32rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.form {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  padding: 0 16rpx;
+  height: 60rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  border: 1rpx solid #e5e5e5;
+}
+
+.picker {
+  flex: 1;
+  padding: 0 16rpx;
+  height: 60rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  border: 1rpx solid #e5e5e5;
+  display: flex;
+  align-items: center;
+}
+
+
+
+.picker-text {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.picker-text.placeholder {
+  color: #999;
+}
+
+.picker-text:empty::before {
+  content: attr(placeholder);
+  color: #999;
+}
+
+/* 学校选择器样式 */
+.school-selector {
+  flex: 1 !important;
+  padding: 0 16rpx !important;
+  height: 60rpx !important;
+  background-color: #f8f8f8 !important;
+  border-radius: 8rpx !important;
+  border: 1rpx solid #e5e5e5 !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+
+.school-text {
+  font-size: 28rpx !important;
+  color: #333 !important;
+  flex: 1 !important;
+}
+
+.school-text.placeholder {
+  color: #999 !important;
+}
+
+.school-arrow {
+  font-size: 28rpx !important;
+  color: #999 !important;
+  margin-left: 16rpx !important;
+}
+
+.school-help-text {
+  display: flex;
+  align-items: center;
+  margin-top: 12rpx;
+  margin-left: 160rpx;
+  padding-left: 0;
+}
+
+.school-help-text .help-text {
+  font-size: 20rpx !important;
+  color: #ccc !important;
+  margin-left: 8rpx;
+}
+
+.image-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200rpx;
+  height: 200rpx;
+  background-color: #f8f8f8;
+  border: 2rpx dashed #ddd;
+  border-radius: 8rpx;
+  margin-top: 16rpx;
+}
+
+.upload-icon {
+  font-size: 48rpx;
+  color: #999;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.preview-image {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 8rpx;
+  margin-top: 16rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 48rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 48rpx;
+  height: 88rpx;
+  font-size: 32rpx;
+  border: none;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+}
+
+.tips {
+  background-color: #fff3cd;
+  border: 1rpx solid #ffeaa7;
+  border-radius: 8rpx;
+  padding: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  color: #856404;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+
+.tips-content {
+  font-size: 24rpx;
+  color: #856404;
+  line-height: 1.6;
+}
+
+.tips-item {
+  margin-bottom: 8rpx;
+}
+
+.tips-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 学历卡片列表样式 */
+.education-list {
+  margin-bottom: 24rpx;
+}
+
+.education-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.04);
+  margin-bottom: 24rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 600;
+}
+
+.status-badge {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+}
+.status-badge.pending {
+  color: #8a4f00;
+  background-color: #fff3cd;
+  border: 1rpx solid #ffeaa7;
+}
+.status-badge.approved {
+  color: #0c6848;
+  background-color: #d1e7dd;
+  border: 1rpx solid #a3cfbb;
+}
+.status-badge.rejected {
+  color: #842029;
+  background-color: #f8d7da;
+  border: 1rpx solid #f1aeb5;
+}
+
+.card-body .line {
+  display: block;
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.8;
+}
+
+/* 操作按钮 */
+.card-actions {
+  display: flex;
+  gap: 32rpx;
+  margin-top: 24rpx;
+  flex-direction: row;
+}
+
+.action-btn {
+  flex: 1;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  padding: 12rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  order: 1; /* 左侧：修改（蓝色） */
+}
+
+.action-btn.delete {
+  flex: 1;
+  background: #e5e5e5;
+  color: #666;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  padding: 12rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  order: 2; /* 右侧：删除（灰色） */
+}

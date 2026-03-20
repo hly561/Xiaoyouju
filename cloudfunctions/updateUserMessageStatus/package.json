@@ -1,0 +1,9 @@
+{
+  "name": "updateUserMessageStatus",
+  "version": "1.0.0",
+  "description": "更新单个用户的messageAllread状态",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

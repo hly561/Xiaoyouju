@@ -2,7 +2,6 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "t-navbar": "tdesign-miniprogram/navbar/navbar",
-    "selector-component": "plugin://citySelector/selector-component",
     "letter-dialog": "../../components/letterDialog/letterDialog",
     "t-icon": "tdesign-miniprogram/icon/icon"
   }

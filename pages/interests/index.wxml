@@ -1,23 +1,48 @@
-<t-navbar title="我的兴趣" left-arrow />
+<wxs module="utils">
+var isSelected = function(selectedList, value) {
+  for (var i = 0; i < selectedList.length; i++) {
+    if (selectedList[i] === value) {
+      return true;
+    }
+  }
+  return false;
+};
 
-<view class="interest-tip">
-  <text>为了更好的为您推荐您感兴趣的活动，请选择您的兴趣爱好，设置后我们会在首页的"推荐"为您个性化推送活动啦～</text>
-</view>
+module.exports.isSelected = isSelected;
+</wxs>
 
-<view class="interest-form">
-  <view wx:for="{{interestCategories}}" wx:for-item="categoryItem" wx:key="category">
-    <view class="category-title">{{categoryItem.category}}</view>
-    <view class="options-list">
-      <view
-        wx:for="{{categoryItem.options}}"
-        wx:for-item="optionItem"
-        wx:key="*this"
-        class="option-tag {{selectedInterests.includes(optionItem) ? 'selected' : ''}}"
-        data-interest="{{optionItem}}"
-        bindtap="toggleInterest"
-      >
-        {{optionItem}}
+<view class="interest-container">
+  <!-- 提示信息 -->
+  <view class="interest-tip">请选择您感兴趣的类别，这将帮助我们为您推荐更适合的内容和活动</view>
+  
+  <!-- 分类列表 -->
+  <view class="category-sections">
+    <view
+      wx:for="{{customCategoryOptions}}"
+      wx:key="value"
+      class="category-section"
+    >
+      <!-- 分类标题 -->
+      <view class="category-title">{{item.text}}</view>
+      
+      <!-- 该分类下的子项 -->
+      <view class="sub-category-list">
+        <view
+          wx:for="{{subCategoryData[item.value]}}"
+          wx:for-item="subItem"
+          wx:key="value"
+          class="sub-category-item {{utils.isSelected(selectedSubCategories, subItem.value) ? 'selected' : ''}}"
+          data-value="{{subItem.value}}"
+          bind:tap="onSelectSubCategory"
+        >
+          {{subItem.text}}
+        </view>
       </view>
     </view>
+  </view>
+  
+  <!-- 确认按钮 -->
+  <view class="footer-btn-bar">
+    <view class="confirm-btn" bindtap="onConfirm">确认选择</view>
   </view>
 </view>

@@ -1,4 +1,4 @@
-import request from '~/api/request';
+import request from '../../../api/request.js';
 import { areaList } from './areaData.js';
 
 Page({
@@ -54,11 +54,58 @@ Page({
       });
     }
   },
-  onChooseAvatar(e) {
+  async onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
-    this.setData({
-      'personInfo.image': avatarUrl,
+    
+    console.log('选择的头像路径:', avatarUrl);
+    
+    // 显示上传提示
+    wx.showLoading({
+      title: '上传头像中...'
     });
+    
+    try {
+      // 生成唯一的文件名
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substr(2, 9);
+      const cloudPath = `avatars/${timestamp}_${randomStr}.jpg`;
+      
+      console.log('开始上传到云存储，路径:', cloudPath);
+      
+      // 上传到云存储
+      const uploadResult = await wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: avatarUrl
+      });
+      
+      console.log('头像上传成功:', uploadResult.fileID);
+      
+      // 更新头像为云存储文件ID
+      this.setData({
+        'personInfo.image': uploadResult.fileID,
+      });
+      
+      wx.hideLoading();
+      
+      wx.showToast({
+        title: '头像上传成功',
+        icon: 'success'
+      });
+      
+    } catch (error) {
+      wx.hideLoading();
+      console.error('头像上传失败:', error);
+      
+      wx.showToast({
+        title: '头像上传失败',
+        icon: 'none'
+      });
+      
+      // 上传失败时仍然设置临时路径，但会在保存时提示用户重新选择
+      this.setData({
+        'personInfo.image': avatarUrl,
+      });
+    }
   },
 
   onNameChange(e) {
@@ -70,6 +117,17 @@ Page({
 
   async onSaveInfo() {
     try {
+      // 检查头像是否为微信临时文件
+      if (this.data.personInfo.image && this.data.personInfo.image.startsWith('wxfile://')) {
+        wx.showModal({
+          title: '提示',
+          content: '头像上传失败，请重新选择头像后再保存',
+          showCancel: false,
+          confirmText: '知道了'
+        });
+        return;
+      }
+      
       const db = wx.cloud.database();
       const phoneNumber = wx.getStorageSync('phoneNumber');
       

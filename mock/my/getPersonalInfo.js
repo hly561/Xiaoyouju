@@ -1,4 +1,4 @@
-import { getLocalUrl } from '~/utils/util.js';
+import { getLocalUrl } from '../../utils/util.js';
 
 export default {
   path: '/api/genPersonalInfo',

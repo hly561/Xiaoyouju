@@ -1,0 +1,60 @@
+<view class="organized-activities">
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <t-loading theme="circular" size="48rpx" text="加载中..." />
+  </view>
+  
+  <!-- 空状态 -->
+  <view wx:elif="{{isEmpty}}" class="empty-container">
+    <t-empty icon="activity" description="暂无组织的活动">
+      <t-button slot="action" theme="primary" size="small" bindtap="onCreateActivity">
+        发布活动
+      </t-button>
+    </t-empty>
+  </view>
+  
+  <!-- 活动列表 -->
+  <view wx:else class="activities-container">
+    <view 
+      wx:for="{{activities}}" 
+      wx:key="_id" 
+      class="activity-card"
+      data-id="{{item._id}}"
+      bindtap="onActivityTap"
+    >
+      <view class="activity-header">
+        <view class="activity-title">{{item.title}}</view>
+        <view class="activity-status">
+          <!-- 报名状态标签（仅在未开始状态下显示） -->
+          <view wx:if="{{item.status === 'upcoming' && item.registrationText}}" class="status-tag registration-tag" style="color: {{item.registrationColor}}; border-color: {{item.registrationColor}}; background: {{item.registrationColor}}1a;">
+            {{item.registrationText}}
+          </view>
+          <!-- 活动状态标签 -->
+          <view class="status-tag" style="color: {{item.statusColor}}; border-color: {{item.statusColor}}; background: {{item.statusColor}}1a;">
+            {{item.statusText}}
+          </view>
+        </view>
+      </view>
+      
+      <view class="activity-info">
+        <view class="info-item">
+          <t-icon name="time" size="32rpx" color="{{item.iconColor}}" />
+          <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+        </view>
+        
+        <view class="info-item">
+          <t-icon name="location" size="32rpx" color="{{item.iconColor}}" />
+          <text>{{item.locationText}}</text>
+        </view>
+        
+        <view class="info-item">
+          <t-icon name="user" size="32rpx" color="{{item.iconColor}}" />
+          <text>{{item.participantCount}}/{{item.maxParticipants}} 人报名</text>
+        </view>
+      </view>
+      
+
+    </view>
+  </view>
+</view>

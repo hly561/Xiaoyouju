@@ -1,32 +1,22 @@
-<t-navbar left-arrow />
-<view class="page login">
-  <view class="login__title"> 欢迎登录校友会 </view>
-  <view class="login__content">
-    <view class="login__input">
-      <t-input value="{{phoneNumber}}" placeholder="请输入手机号" type="number" bindchange="onPhoneInput">
-        <view slot="label" class="input-label">
-          <text>+86</text>
-          <t-icon name="caret-down-small" size="40rpx" class="input-iconl"></t-icon>
+<view class="page login" bindtouchstart="onTouchStart" catchtouchmove="onTouchMove">
+  <page-container show="{{showContainer}}" duration="{{0}}" overlay="{{false}}" bind:beforeleave="onBeforeLeave">
+    <view class="login">
+      <view class="back-button" bindtap="onBackTap">
+        <t-icon name="chevron-left" size="48rpx" />
+      </view>
+      <view class="login__title"> 校有局，有校友就有局 </view>
+      <view class="login__content">
+        <!-- 获取手机号登录 -->
+        <view class="login__wechat">
+          <view class="login__button">
+            <view class="login__tips">请授权手机号以完成登录</view>
+            <button class="phone-auth-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
+              <t-icon name="mobile" size="40rpx" class="button-icon"></t-icon>
+              获取手机号
+            </button>
+          </view>
         </view>
-      </t-input>
+      </view>
     </view>
-
-    <view class="login__tips">未注册的手机号验证通过后将自动注册</view>
-
-    <t-radio-group allow-uncheck borderless value="{{radioValue}}" bind:change="onCheckChange">
-      <t-radio
-        label="同意《协议条款》"
-        value="agree"
-        t-class="radio-class"
-        t-class-icon="radio-class-icon"
-        t-class-label="radio-class-label"
-      />
-    </t-radio-group>
-
-    <view class="login__button">
-      <t-button theme="primary" size="large" block disabled="{{!isSubmit}}" bindtap="login">验证并登录</t-button>
-    </view>
-  </view>
-
-
+  </page-container>
 </view>

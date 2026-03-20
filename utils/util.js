@@ -16,10 +16,16 @@ const formatTime = (date) => {
 
 // 复制到本地临时路径，方便预览
 const getLocalUrl = (path, name) => {
-  const fs = wx.getFileSystemManager();
-  const tempFileName = `${wx.env.USER_DATA_PATH}/${name}`;
-  fs.copyFileSync(path, tempFileName);
-  return tempFileName;
+  try {
+    const fs = wx.getFileSystemManager();
+    const tempFileName = `${wx.env.USER_DATA_PATH}/${name}`;
+    fs.copyFileSync(path, tempFileName);
+    return tempFileName;
+  } catch (error) {
+    console.warn('getLocalUrl failed:', error);
+    // 如果复制失败，直接返回原路径
+    return path;
+  }
 };
 
 module.exports = {

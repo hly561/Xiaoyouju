@@ -1,0 +1,11 @@
+{
+  "usingComponents": {
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "nav": "/components/nav/index"
+  },
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "我组织的活动"
+}

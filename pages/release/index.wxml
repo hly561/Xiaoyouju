@@ -1,22 +1,27 @@
-<t-navbar title="发布活动" left-arrow />
+<t-navbar title="发布活动">
+  <view slot="left" class="custom-back" bindtap="onNavigationBarBackTap">
+    <t-icon name="chevron-left" size="36rpx" />
+  </view>
+</t-navbar>
 <view class="page">
   <view class="release-container">
     <!-- 活动标题 -->
-    <t-input
-      label="活动标题"
-      placeholder="请输入活动标题"
-      value="{{title}}"
-      maxlength="20"
-      bind:change="onTitleChange"
-      suffix="{{title.length}}/20"
-    />
+    <view class="panel-item">
+      <t-input
+        placeholder="请输入活动标题"
+        value="{{title}}"
+        maxlength="40"
+        bind:change="onTitleChange"
+        suffix="{{title.length}}/40"
+      >
+        <view slot="label">活动标题<text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+      </t-input>
+    </view>
     
     <!-- 活动类型 -->
-    <t-cell
-      title="活动类型"
-      t-class="panel-item no-bottom-border"
-      bordered="{{false}}"
-    />
+    <t-cell t-class="panel-item no-bottom-border" bordered="{{false}}">
+      <view slot="title" class="cell-title"><text>活动类型</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+    </t-cell>
 
     <view class="custom-category-list">
       <view
@@ -62,13 +67,14 @@
     
     <!-- 活动开始时间 -->
     <t-cell 
-      title="活动开始时间" 
       hover 
       note="{{activityStartTime || '请选择活动开始时间'}}" 
       arrow 
       bindtap="showActivityStartTimePicker" 
       t-class="panel-item" 
-    /> 
+    >
+      <view slot="title" class="cell-title"><text>活动开始时间</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+    </t-cell>
     
     <t-date-time-picker 
       title="选择活动开始时间" 
@@ -82,13 +88,14 @@
     
     <!-- 活动结束时间 -->
     <t-cell 
-      title="活动结束时间" 
       hover 
       note="{{activityEndTime || '请选择活动结束时间'}}" 
       arrow 
       bindtap="showActivityEndTimePicker" 
       t-class="panel-item" 
-    /> 
+    >
+      <view slot="title" class="cell-title"><text>活动结束时间</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+    </t-cell>
     
     <t-date-time-picker 
       title="选择活动结束时间" 
@@ -102,13 +109,14 @@
     
     <!-- 报名截止时间 -->
     <t-cell 
-      title="报名截止时间" 
       hover 
       note="{{registrationDeadline || '请选择报名截止时间'}}" 
       arrow 
       bindtap="showRegistrationDeadlinePicker" 
       t-class="panel-item" 
-    /> 
+    >
+      <view slot="title" class="cell-title"><text>报名截止时间</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+    </t-cell>
     
     <t-date-time-picker 
       title="选择报名截止时间" 
@@ -121,7 +129,8 @@
     />
 
     <!-- 活动形式 -->
-    <t-cell title="活动形式" t-class="panel-item">
+    <t-cell t-class="panel-item">
+      <view slot="title" class="cell-title"><text>活动形式</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
       <t-radio-group value="{{activityType}}" bind:change="onActivityTypeChange" slot="note">
         <t-radio value="offline" label="线下活动" />
         <t-radio value="online" label="线上活动" />
@@ -131,34 +140,43 @@
     <!-- 线下活动信息 -->
     <block wx:if="{{activityType === 'offline'}}">
       <t-cell 
-        title="活动城市" 
         hover 
         note="{{city || '请选择活动城市'}}"
         arrow 
         bindtap="onChooseCity"
         t-class="panel-item" 
-      />
-      <t-input
-        label="详细地址"
-        placeholder="请选择详细地址"
-        value="{{address}}"
-        readonly="true"
-        bind:tap="onChooseAddress"
-      />
+      >
+        <view slot="title" class="cell-title"><text>活动城市</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+      </t-cell>
+      <view class="panel-item">
+        <t-input
+          placeholder="请输入活动地点"
+          value="{{address}}"
+          maxlength="30"
+          bind:change="onAddressChange"
+          suffix="{{address.length}}/30"
+        >
+          <view slot="label">活动地点<text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+        </t-input>
+      </view>
     </block>
 
     <!-- 线上活动信息 -->
     <block wx:if="{{activityType === 'online'}}">
-      <t-input
-        label="会议链接"
-        placeholder="请输入会议链接"
-        value="{{meetingLink}}"
-        bind:change="onMeetingLinkChange"
-      />
+      <view class="panel-item">
+        <t-input
+          placeholder="请输入会议链接"
+          value="{{meetingLink}}"
+          bind:change="onMeetingLinkChange"
+        >
+          <view slot="label">会议链接<text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+        </t-input>
+      </view>
     </block>
 
     <!-- 报名人数上限 -->
-    <t-cell title="报名人数上限" t-class="panel-item">
+    <t-cell t-class="panel-item">
+      <view slot="title" class="cell-title"><text>报名人数上限</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
       <view class="limit-container" slot="note">
         <t-radio-group value="{{hasParticipantLimit}}" bind:change="onHasParticipantLimitChange">
           <t-radio value="{{true}}" label="限制" />
@@ -169,26 +187,82 @@
     </t-cell>
 
     <!-- 活动介绍 -->
-    <t-textarea
-      label="活动介绍"
-      placeholder="请输入活动介绍内容"
-      value="{{description}}"
-      maxlength="500"
-      disableDefaultPadding="{{true}}"
-      indicator
-      bind:change="onDescriptionChange"
-    />
+    <view class="panel-item">
+      <t-textarea
+        placeholder="请输入活动介绍内容"
+        value="{{description}}"
+        maxlength="500"
+        disableDefaultPadding="{{true}}"
+        indicator
+        bind:change="onDescriptionChange"
+      >
+        <view slot="label" class="textarea-label">活动介绍<text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+      </t-textarea>
+    </view>
+    <t-divider style="margin: 24rpx 32rpx 8rpx 32rpx;" />
+
+    <!-- 活动图片/海报 -->
+    <t-cell t-class="panel-item no-bottom-border" t-class-title="cell-title" bordered="{{false}}">
+      <view slot="title" class="title-inline" style="display:flex;align-items:center;gap:12rpx;white-space:nowrap;">
+        <text>活动图片/海报</text>
+        <t-icon name="help-circle" size="32rpx" color="#999999" class="help-icon inline" catchtap="onPosterInfoTap" />
+      </view>
+    </t-cell>
+    <view class="upload-wrapper">
+      <t-upload
+        media-type="{{['image']}}"
+        files="{{posterFiles}}"
+        max="3"
+        bind:success="onPosterUploadSuccess"
+        bind:remove="onPosterRemove"
+        bind:click="onPosterClick"
+        gridConfig="{{ {column: 3, width: 160, height: 160} }}"
+      />
+    </view>
+    <t-divider style="margin: 24rpx 32rpx 8rpx 32rpx;" />
 
     <!-- 报名限制 -->
-    <t-cell title="报名限制" t-class="panel-item">
-      <t-radio-group value="{{registrationRestriction}}" bind:change="onRegistrationRestrictionChange" slot="note">
-        <t-radio value="all" label="所有人可参加" />
-        <t-radio value="school" label="限本校参加" />
-      </t-radio-group>
+    <t-cell t-class="panel-item">
+      <view slot="title" class="cell-title"><text>报名限制</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
+      <view class="radio-group-vertical" slot="note">
+        <t-radio-group value="{{registrationRestriction}}" bind:change="onRegistrationRestrictionChange" t-class="radio-vertical">
+          <t-radio value="all" label="所有人可参加" />
+          <t-radio value="school" label="限同校校友参加" />
+        </t-radio-group>
+
+        <!-- 当选择限本校参加，且有多个已认证学校时显示学校标签选择（仅多校显示） -->
+        <block wx:if="{{registrationRestriction === 'school' && restrictedSchoolOptions.length > 1}}">
+          <view class="school-tags-container">
+            <view class="school-tags-group">
+              <view
+                wx:for="{{restrictedSchoolOptions}}"
+                wx:key="*this"
+                class="school-tag {{restrictedSchool === item ? 'is-checked' : ''}}"
+                data-value="{{item}}"
+                bind:tap="onRestrictedSchoolTagTap"
+              >
+                {{ item }}
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </t-cell>
+
+    <!-- 报名问卷 -->
+    <t-cell t-class="panel-item questionnaire-cell" t-class-title="cell-title" hover arrow bindtap="onEditQuestionnaire">
+      <view slot="title" class="title-inline" style="display:flex;align-items:center;gap:12rpx;white-space:nowrap;">
+        <text>报名问卷</text>
+        <t-icon name="help-circle" size="32rpx" color="#999999" class="help-icon inline" catchtap="onQuestionnaireInfoTap" />
+      </view>
+      <view slot="note" class="qn-note">
+        <text wx:if="{{questionnaireFields.length > 0}}" class="qn-count">已设置{{questionnaireFields.length}}项</text>
+      </view>
     </t-cell>
 
     <!-- 群聊二维码 -->
-    <t-cell title="群聊二维码" t-class="panel-item">
+    <t-cell t-class="panel-item">
+      <view slot="title" class="cell-title"><text>群聊二维码</text><text class="required-star-inline" style="color:#FF3B30;">*</text></view>
       <view class="qrcode-upload-container" slot="note">
         <t-upload
           media-type="{{['image']}}"
@@ -203,10 +277,10 @@
     </t-cell>
 
     <view class="release-submit-container">
-    <t-button theme="primary" class="submit-btn" bind:tap="submitForm">发布活动</t-button>
+      <t-button theme="primary" class="submit-btn" bind:tap="submitForm">{{isEditMode ? '保存修改' : '发布活动'}}</t-button>
+    </view>
   </view>
-</view>
-
+ 
   <!-- 活动类型选择器 -->
   <!-- <t-action-sheet
     visible="{{activityTypeSelectorVisible}}"
@@ -228,7 +302,7 @@
       style="width: 100%; height: 100%;"
     >
       
-      <cover-image class="center-marker" src="/images/location.png" /> 
+      <cover-image class="center-marker" src="/images/location.svg" /> 
     </map>
     <view class="confirm-location-btn">
       <t-button theme="primary" bind:tap="onConfirmLocation">确定位置</t-button>

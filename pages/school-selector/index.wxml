@@ -1,0 +1,168 @@
+<view class="school-selector">
+  <!-- 地区选择 -->
+  <view wx:if="{{showRegionSelector}}" class="region-selector">
+    <view class="selector-header">
+      <text class="header-title">选择地区</text>
+    </view>
+    <view class="region-list">
+       <view 
+         class="region-card"
+         wx:for="{{regions}}"
+         wx:key="*this"
+         data-region="{{item}}"
+         bindtap="onSelectRegion"
+       >
+         <view class="card-content">
+         <text class="region-name">{{item}}</text>
+          
+        </view>
+        <text class="chevron">›</text>
+      </view>
+     </view>
+  </view>
+
+  <!-- 省份选择 -->
+  <view wx:if="{{showProvinceSelector}}" class="province-selector">
+    <view class="selector-header">
+      <view class="back-btn" bindtap="backToRegion">
+        <text class="chevron">‹</text>
+        <text class="back-text">返回</text>
+      </view>
+      <text class="header-title">{{currentRegion}} - {{currentRegion === '港澳台' ? '选择地区' : currentRegion === '海外' ? '选择国家' : '选择省份'}}</text>
+    </view>
+    <!-- 省份/地区/国家 搜索框 -->
+    <view class="search-container">
+      <view class="search-box">
+        <input 
+          class="search-input" 
+          placeholder="搜索省份/地区/国家" 
+          value="{{areaSearchKeyword}}"
+          bindinput="onAreaSearchInput"
+          confirm-type="search"
+        />
+        <view class="search-clear" wx:if="{{areaSearchKeyword}}" bindtap="onClearAreaSearch">
+          <text class="clear-icon">×</text>
+        </view>
+      </view>
+    </view>
+    <view class="province-list">
+      <!-- 搜索结果 -->
+      <view wx:if="{{areaSearchKeyword && filteredProvinces.length > 0}}">
+        <view 
+          class="province-item"
+          wx:for="{{filteredProvinces}}"
+          wx:key="*this"
+          data-province="{{item}}"
+          bindtap="onSelectProvince"
+        >
+          <text class="province-name">{{item}}</text>
+          <text class="chevron">›</text>
+        </view>
+      </view>
+
+      <!-- 无搜索结果 -->
+      <view wx:elif="{{areaSearchKeyword && filteredProvinces.length === 0}}" class="no-result">
+        <text class="no-result-text">未找到相关省份/地区/国家</text>
+      </view>
+
+      <!-- 全部列表 -->
+      <view wx:else>
+        <view 
+          class="province-item"
+          wx:for="{{provinces}}"
+          wx:key="*this"
+          data-province="{{item}}"
+          bindtap="onSelectProvince"
+        >
+          <text class="province-name">{{item}}</text>
+          <text class="chevron">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学校选择 -->
+  <view wx:if="{{showSchoolSelector}}" class="school-selector-content">
+    <view class="selector-header">
+      <view class="back-btn" bindtap="backToProvince">
+        <text class="chevron">‹</text>
+        <text class="back-text">返回</text>
+      </view>
+      <text class="header-title">{{currentRegion}} - {{currentProvince}}</text>
+    </view>
+    
+
+    
+    <!-- 搜索框 -->
+    <view wx:if="{{!isCustomMode}}" class="search-container">
+      <view class="search-box">
+        <input 
+          class="search-input" 
+          placeholder="搜索学校名称" 
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          confirm-type="search"
+        />
+        <view class="search-clear" wx:if="{{searchKeyword}}" bindtap="onClearSearch">
+          <text class="clear-icon">×</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 学校列表 -->
+    <scroll-view class="school-list" scroll-y="true">
+      <!-- 自定义模式：显示添加学校提示 -->
+      <view wx:if="{{isCustomMode}}">
+        <view class="custom-add-section">
+          <view class="add-school-item" bindtap="showCustomSchoolInput">
+            <view class="add-icon-container">
+              <text class="add-icon">＋</text>
+            </view>
+            <view class="add-content">
+              <text class="add-title">添加新学校</text>
+              <text class="add-desc">点击此处填写您的学校名称</text>
+            </view>
+            <text class="chevron">›</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 普通模式：显示现有学校列表 -->
+      <view wx:else>
+        <!-- 搜索结果 -->
+        <view wx:if="{{searchKeyword && filteredSchools.length > 0}}">
+          <view class="search-result-title">搜索结果 ({{filteredSchools.length}})</view>
+          <view 
+            class="school-item"
+            wx:for="{{filteredSchools}}"
+            wx:key="*this"
+            data-school="{{item}}"
+            bindtap="onSelectSchool"
+          >
+            <text class="school-name">{{item}}</text>
+          </view>
+        </view>
+
+        <!-- 无搜索结果 -->
+        <view wx:elif="{{searchKeyword && filteredSchools.length === 0}}" class="no-result">
+          <text class="no-result-text">未找到相关学校</text>
+        </view>
+
+        <!-- 所有学校列表 -->
+        <view wx:else>
+          <view class="school-section">
+            <view 
+              class="school-item"
+              wx:for="{{schools}}"
+              wx:key="*this"
+              data-school="{{item}}"
+              bindtap="onSelectSchool"
+            >
+              <text class="school-name">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

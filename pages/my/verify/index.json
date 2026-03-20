@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "校友认证",
-  "usingComponents": {}
+  "usingComponents": {
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
 }

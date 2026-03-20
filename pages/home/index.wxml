@@ -1,92 +1,346 @@
-<nav nav-type="search" titleText="校友会活动平台" selectedCity="{{selectedCity}}" searchValue="{{searchValue}}" bind:searchinput="onSearchInput" bind:searchclear="onSearchClear" />
+<nav nav-type="search" titleText="校有局" selectedCity="{{selectedCity}}" searchValue="{{searchValue}}" bind:searchinput="onSearchInput" bind:searchclear="onSearchClear" />
 <view class="home-container">
   <view class="home-content">
-    <t-tabs value="{{currentTab}}" defaultValue="recommend" bind:change="onTabChange">
+    <t-tabs value="{{currentTab}}" bind:change="onTabChange">
       <t-tab-panel label="推荐" value="recommend">
         <t-pull-down-refresh
           value="{{enable}}"
           bind:refresh="onRefresh"
           loadingTexts="{{['下拉刷新', '松手刷新', '正在刷新', '刷新完成']}}"
         >
-          <view class="home-card-list">
-            <view
-              wx:for="{{activities}}"
-              wx:key="_id"
-              class="activity-card"
-              bindtap="onViewDetail"
-              data-id="{{item._id}}"
-            >
-              <view class="activity-title">{{item.title}}</view>
-              <view class="activity-info">
-                <view class="info-item">
-                  <t-icon name="time" size="32rpx" />
-                  <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+          <scroll-view scroll-y style="height: 100%;" show-scrollbar="{{false}}">
+            <!-- 兴趣引导提示 -->
+            <block wx:if="{{showInterestGuide}}">
+              <view class="interest-guide">
+                <view class="guide-content">
+                  <t-icon name="heart" size="48rpx" color="#0052D9" />
+                  <view class="guide-text">您还没有选择兴趣，去选择</view>
+                  <t-button theme="primary" size="small" bindtap="goToInterestsPage">选择兴趣</t-button>
                 </view>
-                <view class="info-item">
-                  <t-icon name="location" size="32rpx" />
-                  <text>{{item.locationText}}</text>
+              </view>
+            </block>
+            <!-- 活动列表 -->
+            <block wx:else>
+            <view class="home-card-list">
+              <view wx:if="{{activities.length === 0}}" class="empty-state">
+                <view class="empty-content">
+                  <t-icon name="info-circle" size="96rpx" color="#CCCCCC" />
+                  <view class="empty-text">暂无符合条件的活动，去发布一个或去别的地方看看吧</view>
+                </view>
+              </view>
+              <view wx:else>
+                <view
+                  wx:for="{{activities}}"
+                  wx:key="_id"
+                  class="activity-card"
+                  style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;position:relative;"
+                  bindtap="onViewDetail"
+                  data-id="{{item._id}}"
+                >
+                  <view class="card-left" style="flex:1;min-width:0;padding-right:184rpx;">
+                    <view class="activity-title">{{item.title}}</view>
+                    <view class="activity-info">
+                      <view class="info-item">
+                        <t-icon name="time" size="32rpx" />
+                        <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+                      </view>
+                      <view class="info-item">
+                        <t-icon name="location" size="32rpx" />
+                        <text>{{item.locationText}}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <image wx:if="{{item.firstPoster}}" class="poster-thumb" src="{{item.firstPoster}}" mode="aspectFill" style="position:absolute;right:24rpx;top:50%;transform:translateY(-50%);width:136rpx;height:136rpx;border-radius:12rpx;" />
                 </view>
               </view>
             </view>
-          </view>
+            </block>
+          </scroll-view>
         </t-pull-down-refresh>
       </t-tab-panel>
       <t-tab-panel label="同城" value="city">
+        <!-- 活动标签筛选区域 -->
+        <view class="filter-container">
+          <!-- 兴趣分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" show-scrollbar="{{false}}">
+            <view class="filter-tags">
+              <view 
+                class="filter-tag {{selectedInterestFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onInterestFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{interestOptions}}"
+                wx:key="value"
+                class="filter-tag {{selectedInterestFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onInterestFilterChange"
+              >
+                {{item.text}}
+              </view>
+            </view>
+          </scroll-view>
+          <!-- 子分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" wx:if="{{currentSubcategoryOptions.length > 0}}">
+            <view class="filter-tags subcategory-tags">
+              <view 
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onSubcategoryFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{currentSubcategoryOptions}}"
+                wx:key="value"
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onSubcategoryFilterChange"
+              >
+                {{item.label}}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
         <t-pull-down-refresh
           value="{{enable}}"
           bind:refresh="onRefresh"
           loadingTexts="{{['下拉刷新', '松手刷新', '正在刷新', '刷新完成']}}"
         >
-          <view class="home-card-list">
-            <view
-              wx:for="{{activities}}"
-              wx:key="_id"
-              class="activity-card"
-              bindtap="onViewDetail"
-              data-id="{{item._id}}"
-            >
-              <view class="activity-title">{{item.title}}</view>
-              <view class="activity-info">
-                <view class="info-item">
-                  <t-icon name="time" size="32rpx" />
-                  <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+          <scroll-view scroll-y style="height: 100%;" show-scrollbar="{{false}}">
+            <view class="home-card-list">
+              <view wx:if="{{activities.length === 0}}" class="empty-state">
+                <view class="empty-content">
+                  <t-icon name="info-circle" size="96rpx" color="#CCCCCC" />
+                  <view class="empty-text">暂无符合条件的活动，去发布一个或去别的地方看看吧</view>
                 </view>
-                <view class="info-item">
-                  <t-icon name="location" size="32rpx" />
-                  <text>{{item.locationText}}</text>
+              </view>
+              <view wx:else>
+                <view
+                  wx:for="{{activities}}"
+                  wx:key="_id"
+                  class="activity-card"
+                  style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;position:relative;"
+                  bindtap="onViewDetail"
+                  data-id="{{item._id}}"
+                >
+                  <view class="card-left" style="flex:1;min-width:0;padding-right:184rpx;">
+                    <view class="activity-title">{{item.title}}</view>
+                    <view class="activity-info">
+                      <view class="info-item">
+                        <t-icon name="time" size="32rpx" />
+                        <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+                      </view>
+                      <view class="info-item">
+                        <t-icon name="location" size="32rpx" />
+                        <text>{{item.locationText}}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <image wx:if="{{item.firstPoster}}" class="poster-thumb" src="{{item.firstPoster}}" mode="aspectFill" style="position:absolute;right:24rpx;top:50%;transform:translateY(-50%);width:136rpx;height:136rpx;border-radius:12rpx;" />
                 </view>
               </view>
             </view>
-          </view>
+          </scroll-view>
         </t-pull-down-refresh>
       </t-tab-panel>
       <t-tab-panel label="同校" value="follow">
+        <!-- 活动标签筛选区域 -->
+        <view class="filter-container">
+          <!-- 学校筛选（标签行）：仅在 educations 有多个学校时显示 -->
+          <scroll-view wx:if="{{schoolFilterVisible}}" scroll-x class="filter-scroll" show-scrollbar="{{false}}">
+            <view class="filter-tags">
+              <view 
+                class="filter-tag {{selectedSchoolFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onSchoolFilterSelect"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{schoolOptions}}"
+                wx:key="*this"
+                class="filter-tag {{selectedSchoolFilter === item ? 'active' : ''}}"
+                data-value="{{item}}"
+                bindtap="onSchoolFilterSelect"
+              >
+                {{item}}
+              </view>
+            </view>
+          </scroll-view>
+          <!-- 兴趣分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" show-scrollbar="{{false}}">
+            <view class="filter-tags">
+              <view 
+                class="filter-tag {{selectedInterestFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onInterestFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{interestOptions}}"
+                wx:key="value"
+                class="filter-tag {{selectedInterestFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onInterestFilterChange"
+              >
+                {{item.text}}
+              </view>
+            </view>
+          </scroll-view>
+          <!-- 子分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" wx:if="{{currentSubcategoryOptions.length > 0}}">
+            <view class="filter-tags subcategory-tags">
+              <view 
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onSubcategoryFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{currentSubcategoryOptions}}"
+                wx:key="value"
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onSubcategoryFilterChange"
+              >
+                {{item.label}}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
         <t-pull-down-refresh
           value="{{enable}}"
           bind:refresh="onRefresh"
           loadingTexts="{{['下拉刷新', '松手刷新', '正在刷新', '刷新完成']}}"
         >
-          <view class="home-card-list">
-            <view
-              wx:for="{{activities}}"
-              wx:key="_id"
-              class="activity-card"
-              bindtap="onViewDetail"
-              data-id="{{item._id}}"
-            >
-              <view class="activity-title">{{item.title}}</view>
-              <view class="activity-info">
-                <view class="info-item">
-                  <t-icon name="time" size="32rpx" />
-                  <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+          <scroll-view scroll-y style="height: 100%;" show-scrollbar="{{false}}">
+            <view class="home-card-list">
+              <view wx:if="{{activities.length === 0}}" class="empty-state">
+                <view class="empty-content">
+                  <t-icon name="info-circle" size="96rpx" color="#CCCCCC" />
+                  <view class="empty-text">暂无符合条件的活动，去发布一个或去别的地方看看吧</view>
                 </view>
-                <view class="info-item">
-                  <t-icon name="location" size="32rpx" />
-                  <text>{{item.locationText}}</text>
+              </view>
+              <view wx:else>
+                <view
+                  wx:for="{{activities}}"
+                  wx:key="_id"
+                  class="activity-card"
+                  style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;position:relative;"
+                  bindtap="onViewDetail"
+                  data-id="{{item._id}}"
+                >
+                  <view class="card-left" style="flex:1;min-width:0;padding-right:184rpx;">
+                    <view class="activity-title">{{item.title}}</view>
+                    <view class="activity-info">
+                      <view class="info-item">
+                        <t-icon name="time" size="32rpx" />
+                        <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+                      </view>
+                      <view class="info-item">
+                        <t-icon name="location" size="32rpx" />
+                        <text>{{item.locationText}}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <image wx:if="{{item.firstPoster}}" class="poster-thumb" src="{{item.firstPoster}}" mode="aspectFill" style="position:absolute;right:24rpx;top:50%;transform:translateY(-50%);width:136rpx;height:136rpx;border-radius:12rpx;" />
                 </view>
               </view>
             </view>
-          </view>
+          </scroll-view>
+        </t-pull-down-refresh>
+      </t-tab-panel>
+      <t-tab-panel label="线上" value="online">
+        <!-- 活动标签筛选区域 -->
+        <view class="filter-container">
+          <!-- 兴趣分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" show-scrollbar="{{false}}">
+            <view class="filter-tags">
+              <view 
+                class="filter-tag {{selectedInterestFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onInterestFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{interestOptions}}"
+                wx:key="value"
+                class="filter-tag {{selectedInterestFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onInterestFilterChange"
+              >
+                {{item.text}}
+              </view>
+            </view>
+          </scroll-view>
+          <!-- 子分类筛选 -->
+          <scroll-view scroll-x class="filter-scroll" wx:if="{{currentSubcategoryOptions.length > 0}}">
+            <view class="filter-tags subcategory-tags">
+              <view 
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === '' ? 'active' : ''}}"
+                data-value=""
+                bindtap="onSubcategoryFilterChange"
+              >
+                全部
+              </view>
+              <view 
+                wx:for="{{currentSubcategoryOptions}}"
+                wx:key="value"
+                class="filter-tag subcategory-tag {{selectedSubcategoryFilter === item.value ? 'active' : ''}}"
+                data-value="{{item.value}}"
+                bindtap="onSubcategoryFilterChange"
+              >
+                {{item.label}}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+        <t-pull-down-refresh
+          value="{{enable}}"
+          bind:refresh="onRefresh"
+          loadingTexts="{{['下拉刷新', '松手刷新', '正在刷新', '刷新完成']}}"
+        >
+          <scroll-view scroll-y style="height: 100%;" show-scrollbar="{{false}}">
+            <view class="home-card-list">
+              <view wx:if="{{activities.length === 0}}" class="empty-state">
+                <view class="empty-content">
+                  <t-icon name="info-circle" size="96rpx" color="#CCCCCC" />
+                  <view class="empty-text">暂无符合条件的活动，去发布一个或去别的地方看看吧</view>
+                </view>
+              </view>
+              <view wx:else>
+                <view
+                  wx:for="{{activities}}"
+                  wx:key="_id"
+                  class="activity-card"
+                  style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;position:relative;"
+                  bindtap="onViewDetail"
+                  data-id="{{item._id}}"
+                >
+                  <view class="card-left" style="flex:1;min-width:0;padding-right:184rpx;">
+                    <view class="activity-title">{{item.title}}</view>
+                    <view class="activity-info">
+                      <view class="info-item">
+                        <t-icon name="time" size="32rpx" />
+                        <text>{{item.activityStartTime}} - {{item.activityEndTime}}</text>
+                      </view>
+                      <view class="info-item">
+                        <t-icon name="location" size="32rpx" />
+                        <text>{{item.locationText}}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <image wx:if="{{item.firstPoster}}" class="poster-thumb" src="{{item.firstPoster}}" mode="aspectFill" style="position:absolute;right:24rpx;top:50%;transform:translateY(-50%);width:136rpx;height:136rpx;border-radius:12rpx;" />
+                </view>
+              </view>
+            </view>
+          </scroll-view>
         </t-pull-down-refresh>
       </t-tab-panel>
     </t-tabs>

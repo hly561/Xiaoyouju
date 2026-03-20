@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="certification-list">
+    <!-- 学历卡片 -->
+    <view class="certification-card" wx:for="{{certifications}}" wx:key="index">
+      <view class="card-header">
+        <view class="school-name">{{item.school}}</view>
+        <view class="status-tag" style="color: {{item.statusColor}}; border-color: {{item.statusColor}}; background: {{item.statusColor}}1a;">{{item.statusText}}</view>
+      </view>
+      <view class="card-body">
+        <view class="info-item">学历：{{item.degree}}</view>
+        <view class="info-item">专业：{{item.major}}</view>
+        <view class="info-item">毕业年份：{{item.graduationYear}}</view>
+      </view>
+      <!-- 增加修改/删除按钮（对任意来源都展示） -->
+      <view class="card-footer">
+        <view class="action-btn" bindtap="onEdit" data-index="{{index}}">修改</view>
+        <view class="action-btn delete-btn" bindtap="onDelete" data-index="{{index}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="add-btn" bindtap="onAdd">+ 添加学历</view>
+</view>

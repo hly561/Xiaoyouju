@@ -1,0 +1,342 @@
+/* 学校选择页面样式 */
+.school-selector {
+  height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 选择器头部样式 */
+.selector-header {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  margin-right: 20rpx;
+  padding: 10rpx;
+  border-radius: 8rpx;
+  background-color: #f8f8f8;
+}
+
+.back-btn t-icon {
+  margin-right: 8rpx;
+}
+
+.chevron {
+  color: #999;
+  font-size: 32rpx;
+}
+
+.add-icon {
+  color: #1976d2;
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+
+
+.back-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.header-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  flex: 1;
+}
+
+/* 地区选择样式 */
+.region-selector {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.region-list {
+  flex: 1;
+  background-color: #f5f5f5;
+  padding: 30rpx;
+}
+
+.region-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.region-card:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.12);
+}
+
+.region-card:last-child {
+  margin-bottom: 0;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.region-name {
+  font-size: 36rpx;
+  color: #333;
+  font-weight: 400;
+  margin-bottom: 8rpx;
+}
+
+.region-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+
+
+/* 省份选择样式 */
+.province-selector {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.province-list {
+  flex: 1;
+  background-color: #fff;
+}
+
+.province-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 35rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+.province-item:active {
+  background-color: #f8f8f8;
+}
+
+.province-item:last-child {
+  border-bottom: none;
+}
+
+.province-name {
+  font-size: 32rpx;
+  color: #333;
+}
+
+/* 学校选择样式 */
+.school-selector-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 搜索框样式 */
+.search-container {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #e5e5e5;
+}
+
+.search-box {
+  position: relative;
+  background-color: #f8f8f8;
+  border-radius: 10rpx;
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-clear {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-left: 20rpx;
+}
+
+.clear-icon {
+  color: #fff;
+  font-size: 24rpx;
+  line-height: 1;
+}
+
+/* 学校列表样式 */
+.school-list {
+  flex: 1;
+  background-color: #fff;
+}
+
+.search-result-title {
+  padding: 30rpx 30rpx 20rpx;
+  font-size: 28rpx;
+  color: #666;
+  background-color: #f8f8f8;
+  border-bottom: 1rpx solid #e5e5e5;
+}
+
+.school-section {
+  background-color: #fff;
+}
+
+.school-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+.school-item:active {
+  background-color: #f8f8f8;
+}
+
+.school-item:last-child {
+  border-bottom: none;
+}
+
+.school-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* 无结果样式 */
+.no-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 30rpx;
+}
+
+.no-result-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 响应式调整 */
+@media (max-width: 750rpx) {
+  .region-name {
+    font-size: 32rpx;
+  }
+  
+  .province-name {
+    font-size: 30rpx;
+  }
+  
+  .school-name {
+    font-size: 28rpx;
+  }
+  
+  .header-title {
+    font-size: 30rpx;
+  }
+}
+
+/* 自定义模式样式 */
+.custom-mode-tip {
+  background-color: #fff;
+  margin: 20rpx 30rpx;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  border: 1rpx solid #e3f2fd;
+  background-color: #f3f9ff;
+}
+
+.tip-content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  color: #1976d2;
+  line-height: 1.5;
+  margin-left: 12rpx;
+  flex: 1;
+}
+
+.custom-add-section {
+  padding: 20rpx 30rpx;
+}
+
+.add-school-item {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 32rpx 24rpx;
+  display: flex;
+  align-items: center;
+  border: 2rpx dashed #1976d2;
+  transition: all 0.3s ease;
+}
+
+.add-school-item:active {
+  background-color: #f8f9fa;
+  transform: scale(0.98);
+}
+
+.add-icon-container {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: #e3f2fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.add-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.add-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}

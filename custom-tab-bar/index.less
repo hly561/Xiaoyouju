@@ -1,14 +1,40 @@
 @import '/variable.less';
 
+.custom-tab-bar-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #fff;
+  border-top: 1rpx solid #eee;
+}
+
 .custom-tab-bar {
   --td-tab-bar-height: @tab-bar-height;
 
   &-item {
     margin: 0;
-    padding: 16rpx 24rpx;
+    padding: 8rpx 24rpx;
   }
   
   .t-tab-bar-item__text {
-    padding-top: 6rpx;
+    padding-top: 2rpx;
   }
+}
+
+.message-tab-item {
+  position: relative;
+}
+
+.message-unread-dot {
+  position: absolute;
+  top: 8rpx;
+  right: 90rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background-color: #ff4757;
+  border-radius: 50%;
+  z-index: 10;
+  pointer-events: none;
 }

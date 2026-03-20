@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "审核中心",
+  "usingComponents": {
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
+} 

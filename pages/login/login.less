@@ -1,10 +1,33 @@
+page-container {
+  height: 100vh;
+  width: 100%;
+}
+
 .login {
+  padding-top: 220rpx; /* 顶部间距 */
+  padding-bottom: 160rpx; /* 预留底部空间，避免固定按钮遮挡内容 */
+  position: relative;
+  
+  .back-button {
+    position: absolute;
+    top: 100rpx;
+    left: 32rpx;
+    z-index: 100;
+    width: 60rpx;
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  height: 100vh;
+  box-sizing: border-box;
+
   &__title {
     color: rgba(0, 0, 0, 0.9);
     font-size: 56rpx;
     font-weight: 600;
     line-height: 72rpx;
-    padding: 16rpx 32rpx 40rpx;
+    padding: 16rpx 32rpx 10rpx; /* 进一步减少标题下边距 */
   }
 
   &__input {
@@ -26,12 +49,63 @@
     font-style: normal;
     font-weight: 400;
     line-height: 40rpx;
-    margin: 24rpx 32rpx 32rpx;
+    margin: 32rpx 32rpx 48rpx; /* 适当增大上边距，使提示下移一点 */
   }
 
+  /* 已移除登录页顶部图片样式 */
+
   &__button {
-    margin: 0 32rpx;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16rpx 32rpx calc(env(safe-area-inset-bottom) + 16rpx);
+    background-color: #fff;
+    border-top: none;
+    
+    .login__tips {
+      margin: 0 0 16rpx;
+      text-align: left;
+    }
+    
+    .button-icon {
+      margin-right: 16rpx;
+    }
+    
+    .phone-auth-btn {
+      width: 100%;
+      padding: 24rpx 64rpx;
+      background-color: #0052d9;
+      color: white;
+      border: none;
+      border-radius: 12rpx;
+      font-size: 32rpx;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:disabled {
+        background-color: #e7e7e7;
+        color: #999;
+      }
+    }
   }
+  
+  &__switch {
+    margin: 32rpx;
+    text-align: center;
+    
+    text {
+      color: #576b95;
+      font-size: 28rpx;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  
+
 
   &__password--forget {
     display: flex;

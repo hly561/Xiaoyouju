@@ -1,0 +1,54 @@
+<view class="review-container">
+  <view class="review-title-row">
+    <view class="review-title">待审核学历列表</view>
+    <t-icon wx:if="{{currentManagerRole === 'school_manager'}}" name="info-circle" size="36rpx" class="mgr-icon" bindtap="onShowManagerSchools" />
+  </view>
+  <block wx:if="{{pendingEducations.length === 0}}">
+    <view class="empty-tip">暂无待审核学历条目</view>
+  </block>
+  <block wx:for="{{pendingEducations}}" wx:key="{{item.userId}}_{{item.educationIndex}}">
+    <view class="user-card">
+      <view class="user-header">
+        <image class="user-avatar" src="{{item.image}}" mode="aspectFill" />
+        <view class="user-info">
+          <view class="user-name">{{item.userName || '未填写昵称'}}</view>
+          <view class="user-phone">手机号：{{item.phoneNumber}}</view>
+        </view>
+      </view>
+      <view class="user-detail">
+        <view>真实姓名：{{item.realname || '未填写'}}</view>
+        <view class="school-info">
+          <text>毕业学校：{{item.school || '未填写'}}</text>
+          <view wx:if="{{item.schoolInputMethod === '手动'}}" class="custom-school-tag">
+            <text class="tag-text">用户新增</text>
+          </view>
+        </view>
+
+        <view>学历：{{item.degree || '未填写'}} </view>
+        <view>专业：{{item.major || '未填写'}}</view>
+        <view>毕业年份：{{item.graduationYear || '未填写'}}</view>
+        <view>认证材料：</view>
+        <image class="verify-img" src="{{item.verifyImage}}" mode="aspectFit" wx:if="{{item.verifyImage}}" bindtap="onPreviewImage" data-img="{{item.verifyImage}}" />
+      </view>
+      <view class="review-actions">
+        <button class="approve-btn" bindtap="onApproveUser" data-user-id="{{item.userId}}" data-education-index="{{item.educationIndex}}">通过</button>
+        <button class="reject-btn" bindtap="onRejectUser" data-user-id="{{item.userId}}" data-education-index="{{item.educationIndex}}">拒绝</button>
+      </view>
+    </view>
+  </block>
+  <view wx:if="{{showManagerSchoolsVisible}}" class="mgr-mask" bindtap="onHideManagerSchools"></view>
+  <view wx:if="{{showManagerSchoolsVisible}}" class="mgr-panel">
+    <view class="mgr-header">
+      <view class="mgr-title">我管理的学校</view>
+      <view class="mgr-close" bindtap="onHideManagerSchools"><t-icon name="close" size="48rpx" /></view>
+    </view>
+    <view class="mgr-body">
+      <block wx:if="{{currentManagerSchools.length > 0}}">
+        <view class="mgr-item" wx:for="{{currentManagerSchools}}" wx:key="*this">{{item}}</view>
+      </block>
+      <block wx:else>
+        <view class="mgr-empty">暂无配置管理学校</view>
+      </block>
+    </view>
+  </view>
+</view>

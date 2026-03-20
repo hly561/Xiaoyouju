@@ -1,0 +1,220 @@
+<view class="circles-page">
+  <view class="filter-card">
+    <view class="filter-search">
+      <t-search placeholder="搜索圈子名称" value="{{searchQuery}}" shape="round" clearable bind:change="onSearchChange" bind:clear="onSearchClear" />
+    </view>
+    <view wx:if="{{schoolSelectVisible}}" class="filter-divider"></view>
+    <view wx:if="{{schoolSelectVisible}}" class="filter-school" bindtap="onSchoolBarTap">
+      <text class="school-bar-label">选择学校</text>
+      <view class="school-bar-value">
+        <text class="school-bar-text">{{schoolOptions[schoolIndex]}}</text>
+        <text class="school-bar-arrow">▼</text>
+      </view>
+    </view>
+  </view>
+  <view class="circles-list" wx:if="{{circles.length}}">
+    <view class="circle-column">
+      <view class="circle-item" wx:for="{{leftCircles}}" wx:key="_id">
+        <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+          <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+        </view>
+        <view class="circle-meta">
+          <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+          <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+          <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+          <view class="circle-footer">
+            <view class="circle-user">
+              <image wx:if="{{item.ownerAvatar}}" class="user-avatar" src="{{item.ownerAvatar}}" mode="aspectFill"/>
+              <view wx:else class="user-avatar default-avatar"><text class="avatar-text">{{item.ownerName ? item.ownerName.charAt(0) : '用'}}</text></view>
+              <text class="user-name">{{item.ownerName}}</text>
+            </view>
+            <text wx:for="{{item.eduLines}}" wx:key="index" class="edu-line">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="circle-column">
+      <view class="circle-item" wx:for="{{rightCircles}}" wx:key="_id">
+        <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+          <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+        </view>
+        <view class="circle-meta">
+          <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+          <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+          <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+          <view class="circle-footer">
+            <view class="circle-user">
+              <image wx:if="{{item.ownerAvatar}}" class="user-avatar" src="{{item.ownerAvatar}}" mode="aspectFill"/>
+              <view wx:else class="user-avatar default-avatar"><text class="avatar-text">{{item.ownerName ? item.ownerName.charAt(0) : '用'}}</text></view>
+              <text class="user-name">{{item.ownerName}}</text>
+            </view>
+            <text wx:for="{{item.eduLines}}" wx:key="index" class="edu-line">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:else>
+    <text>暂无圈子，点击下方“新建圈子”上传二维码</text>
+  </view>
+
+  <view class="create-footer">
+    <button class="create-button-native" bindtap="onCreateCircle">新建圈子</button>
+    <button class="manage-button-native" bindtap="onOpenManage">发布管理</button>
+  </view>
+
+  <t-popup visible="{{formVisible}}" placement="bottom" bind:visible-change="onFormVisibleChange">
+    <view class="circle-form">
+      <view class="form-header">新建圈子</view>
+      <view class="form-body">
+        <view class="form-item">
+          <view class="form-label">圈子名称<text class="required-star-inline" style="color:#FF3B30;margin-left:8rpx;">*</text></view>
+          <t-input t-class="input-class" value="{{formName}}" placeholder="请输入圈子名称" maxlength="10" suffix="{{formName.length}}/10" border="{{true}}" bind:change="onFormNameChange" />
+        </view>
+        <view class="form-item upload-item">
+          <view class="form-label">群聊/个人二维码<text class="required-star-inline" style="color:#FF3B30;margin-left:8rpx;">*</text></view>
+          <t-upload media-type="{{['image']}}" files="{{formFiles}}" max="1" bind:success="onFormUploadSuccess" bind:remove="onFormUploadRemove" gridConfig="{{ {column: 1, width: 180, height: 160} }}" />
+        </view>
+        <view class="form-item desc-item">
+          <view class="form-label">圈子描述</view>
+          <t-textarea t-class="textarea-class" value="{{formDesc}}" placeholder="最多 50 字" maxlength="50" indicator bind:change="onFormDescChange" />
+        </view>
+      </view>
+      <view class="form-footer">
+        <t-button class="form-cancel" theme="default" variant="base" bindtap="onFormCancel">取消</t-button>
+        <t-button class="form-submit" theme="primary" bindtap="onFormSubmit">提交</t-button>
+      </view>
+    </view>
+  </t-popup>
+
+  <t-popup visible="{{manageVisible}}" placement="bottom" bind:visible-change="onManageVisibleChange">
+    <view class="manage-popup">
+      <view class="manage-header">发布管理</view>
+      <view wx:if="{{manageEditVisible}}" class="manage-edit">
+        <view class="form-item">
+          <view class="form-label">圈子名称</view>
+          <t-input t-class="input-class" value="{{manageEditName}}" placeholder="请输入圈子名称" maxlength="10" suffix="{{manageEditName.length}}/10" border="{{true}}" bind:change="onManageEditNameChange" />
+        </view>
+        <view class="form-item upload-item">
+          <view class="form-label">圈子二维码</view>
+          <t-upload media-type="{{['image']}}" files="{{manageEditFiles}}" max="1" bind:success="onManageEditUploadSuccess" bind:remove="onManageEditUploadRemove" gridConfig="{{ {column: 1, width: 180, height: 160} }}" />
+        </view>
+        <view class="form-item">
+          <view class="form-label">圈子描述</view>
+          <t-textarea t-class="textarea-class" value="{{manageEditDesc}}" placeholder="最多 50 字" maxlength="50" indicator bind:change="onManageEditDescChange" />
+        </view>
+        <view class="manage-edit-actions">
+          <t-button class="form-cancel" theme="default" variant="base" bindtap="onManageEditCancel">取消</t-button>
+          <t-button class="form-submit" theme="primary" bindtap="onManageEditSubmit">保存</t-button>
+        </view>
+      </view>
+      <view wx:else>
+        <view wx:if="{{manageLoading}}" class="manage-loading">加载中...</view>
+        <scroll-view wx:else scroll-y="true" class="manage-scroll">
+          <view wx:if="{{manageGroups.length}}">
+            <view class="manage-group" wx:for="{{manageGroups}}" wx:for-item="group" wx:key="school">
+              <view class="manage-group-title">{{group.school}}</view>
+              <view class="manage-columns">
+                <view class="manage-column">
+                  <view class="circle-item" wx:for="{{group.leftItems}}" wx:key="_id">
+                    <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+                      <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+                    </view>
+                    <view class="circle-meta">
+                      <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+                      <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+                      <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+                      <view class="circle-footer">
+                        <view class="manage-actions">
+                          <view class="manage-btn-wrap">
+                            <t-button size="small" theme="primary" variant="base" bindtap="onManageEditTap" data-id="{{item._id}}" data-title="{{item.title}}" data-desc="{{item.description}}" data-image="{{item.imageId}}" data-url="{{item.url}}">编辑</t-button>
+                          </view>
+                          <view class="manage-btn-wrap">
+                            <t-button size="small" theme="danger" variant="base" bindtap="onManageDeleteTap" data-id="{{item._id}}" data-image="{{item.imageId}}">删除</t-button>
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="manage-column">
+                  <view class="circle-item" wx:for="{{group.rightItems}}" wx:key="_id">
+                    <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+                      <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+                    </view>
+                    <view class="circle-meta">
+                      <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+                      <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+                      <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+                      <view class="circle-footer">
+                        <view class="manage-actions">
+                          <view class="manage-btn-wrap">
+                            <t-button size="small" theme="primary" variant="base" bindtap="onManageEditTap" data-id="{{item._id}}" data-title="{{item.title}}" data-desc="{{item.description}}" data-image="{{item.imageId}}" data-url="{{item.url}}">编辑</t-button>
+                          </view>
+                          <view class="manage-btn-wrap">
+                            <t-button size="small" theme="danger" variant="base" bindtap="onManageDeleteTap" data-id="{{item._id}}" data-image="{{item.imageId}}">删除</t-button>
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view wx:elif="{{manageList.length}}">
+            <view class="manage-columns">
+              <view class="manage-column">
+                <view class="circle-item" wx:for="{{manageLeft}}" wx:key="_id">
+                  <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+                    <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+                  </view>
+                  <view class="circle-meta">
+                    <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+                    <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+                    <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+                    <view class="circle-footer">
+                      <view class="manage-actions">
+                        <view class="manage-btn-wrap">
+                        <t-button size="small" theme="primary" variant="base" bindtap="onManageEditTap" data-id="{{item._id}}" data-title="{{item.title}}" data-desc="{{item.description}}" data-image="{{item.imageId}}" data-url="{{item.url}}">编辑</t-button>
+                      </view>
+                      <view class="manage-btn-wrap">
+                        <t-button size="small" theme="danger" variant="base" bindtap="onManageDeleteTap" data-id="{{item._id}}" data-image="{{item.imageId}}">删除</t-button>
+                      </view>
+                    </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="manage-column">
+                <view class="circle-item" wx:for="{{manageRight}}" wx:key="_id">
+                  <view class="image-box" bindtap="onPreviewImage" data-url="{{item.url}}">
+                    <image class="circle-image" src="{{item.url}}" mode="aspectFill" />
+                  </view>
+                  <view class="circle-meta">
+                    <text wx:if="{{item.title}}" class="circle-title">{{item.title}}</text>
+                    <view wx:if="{{item.description}}" class="title-desc-gap"></view>
+                    <text wx:if="{{item.description}}" class="circle-desc">{{item.description}}</text>
+                    <view class="circle-footer">
+                      <view class="manage-actions">
+                        <view class="manage-btn-wrap">
+                        <t-button size="small" theme="primary" variant="base" bindtap="onManageEditTap" data-id="{{item._id}}" data-title="{{item.title}}" data-desc="{{item.description}}" data-image="{{item.imageId}}" data-url="{{item.url}}">编辑</t-button>
+                      </view>
+                      <view class="manage-btn-wrap">
+                        <t-button size="small" theme="danger" variant="base" bindtap="onManageDeleteTap" data-id="{{item._id}}" data-image="{{item.imageId}}">删除</t-button>
+                      </view>
+                    </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view wx:else class="manage-empty">暂无发布圈子</view>
+        </scroll-view>
+      </view>
+    </view>
+  </t-popup>
+ 
+  
+</view>

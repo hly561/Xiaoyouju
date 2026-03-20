@@ -1,0 +1,9 @@
+{
+  "name": "migrateEducationsAll",
+  "version": "1.0.0",
+  "description": "全量用户学历迁移",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
