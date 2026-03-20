@@ -177,7 +177,9 @@ Page({
     questionnaireNeedPhoneNumber: false,
     _draftLoaded: false,
     _internalNavigating: false,
-    _initialFormSnapshot: null
+    _initialFormSnapshot: null,
+    statusHeight: 0,
+    navPaddingTop: 0
   },
 
   /**
@@ -212,6 +214,11 @@ Page({
    */
   onLoad: function(options) {
     console.log('Release page loaded with options:', options);
+    try {
+      const statusHeight = wx.getWindowInfo().statusBarHeight;
+      const topExtra = 34;
+      this.setData({ statusHeight, navPaddingTop: statusHeight + topExtra });
+    } catch (e) {}
 
     // 未登录拦截
     const phoneNumber = wx.getStorageSync('phoneNumber');

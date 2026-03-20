@@ -100,7 +100,7 @@
 
 <view class="page">
   <!-- 导航栏 -->
-  <nav title-text="消息" />
+  <nav title-text="消息" top-extra="{{34}}" />
   
   <!-- 加载状态 -->
   <view wx:if="{{loading}}" class="loading-container">

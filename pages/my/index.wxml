@@ -2,7 +2,7 @@
 
 <view class="my">
   <image class="nav-bg" src="/static/bg_navbar.png" />
-  <nav title-text="我的" />
+  <nav title-text="我的" top-extra="{{34}}" />
   <view class="my-info">
     <t-cell-group>
       <t-cell wx:if="{{isLoad}}" bordered="{{false}}" t-class-center="cell-class-center">

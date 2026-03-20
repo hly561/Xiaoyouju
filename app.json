@@ -18,7 +18,7 @@
     "weui": true
   },
   "usingComponents": {
-    "t-toast": "tdesign-miniprogram/toast/index"
+    "t-toast": "tdesign-miniprogram/toast/toast"
   },
 
   "permission": {

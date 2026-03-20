@@ -1,4 +1,4 @@
-<t-navbar title="发布活动">
+<t-navbar title="发布活动" style="padding-top: {{navPaddingTop}}px;">
   <view slot="left" class="custom-back" bindtap="onNavigationBarBackTap">
     <t-icon name="chevron-left" size="36rpx" />
   </view>

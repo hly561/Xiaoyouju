@@ -8,6 +8,10 @@ Component({
       value: 'title',
     },
     titleText: String,
+    topExtra: {
+      type: Number,
+      value: 8,
+    },
     selectedCity: {
       type: String,
       value: '选择城市'
@@ -74,11 +78,13 @@ Component({
       },
     ],
     statusHeight: 0,
+    navPaddingTop: 0,
   },
   lifetimes: {
     ready() {
       const statusHeight = wx.getWindowInfo().statusBarHeight;
-      this.setData({ statusHeight });
+      const navPaddingTop = statusHeight + this.properties.topExtra;
+      this.setData({ statusHeight, navPaddingTop });
     },
     attached() {
       // 获取本地存储的城市信息

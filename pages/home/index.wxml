@@ -1,4 +1,4 @@
-<nav nav-type="search" titleText="校有局" selectedCity="{{selectedCity}}" searchValue="{{searchValue}}" bind:searchinput="onSearchInput" bind:searchclear="onSearchClear" />
+<nav nav-type="search" top-extra="{{34}}" titleText="校有局" selectedCity="{{selectedCity}}" searchValue="{{searchValue}}" bind:searchinput="onSearchInput" bind:searchclear="onSearchClear" />
 <view class="home-container">
   <view class="home-content">
     <t-tabs value="{{currentTab}}" bind:change="onTabChange">

@@ -1,5 +1,5 @@
 <view class="home-navbar">
-  <t-navbar title="{{ titleText }}"></t-navbar>
+  <t-navbar title="{{ titleText }}" style="padding-top: {{navPaddingTop}}px;"></t-navbar>
   <view class="home-navbar__search" wx:if="{{navType === 'search'}}">
     <view class="home-navbar__search-location" bindtap="onLocationTap">
       <t-icon name="location" />
@@ -15,7 +15,7 @@
     />
   </view>
   <t-drawer
-    style="padding-top: {{statusHeight}}px;"
+    style="padding-top: {{navPaddingTop}}px;"
     visible="{{visible}}"
     items="{{sidebar}}"
     placement="left"
