@@ -10,6 +10,7 @@
       shape="round"
       placeholder="请输入活动标题"
       value="{{searchValue}}"
+      placeholder-class="home-search-placeholder"
       bind:change="onSearchInput"
       bind:clear="onSearchClear"
     />
